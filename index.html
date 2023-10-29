@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音频播放器</title>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+    <div>
+        <label for="input_fontFamily">输出声卡:</label> 
+        <select id="select_device">
+        </select>
+    </div>
+    <div>
+        <label for="input_rate">频率:</label> 
+        <input class="input_config_common" type="text" id="input_rate" placeholder="请输入对应声卡频率">
+    </div>
+    <button id="get_deivce_button" onclick="get_deivce()">刷新声卡列表</button>
+    <button id="save_button" onclick="save_config()">保存配置</button>
+    <button id="run_button" onclick="run()">运行</button>
+    <button id="stop_button" onclick="stop()">停止运行</button>
+    <script src="js/socket.io.js"></script>
+    <script src="js/index.js"></script>
+</body>
+</html>
