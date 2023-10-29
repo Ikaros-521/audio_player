@@ -16,10 +16,15 @@
         <label for="input_rate">频率:</label> 
         <input class="input_config_common" type="text" id="input_rate" placeholder="请输入对应声卡频率">
     </div>
+    
     <button id="get_deivce_button" onclick="get_deivce()">刷新声卡列表</button>
     <button id="save_button" onclick="save_config()">保存配置</button>
     <button id="run_button" onclick="run()">运行</button>
-    <button id="stop_button" onclick="stop()">停止运行</button>
+    <div>
+        <label for="textarea_audio_json">播放音频数据：</label>
+        <textarea id="textarea_audio_json" name="textarea_audio_json" rows="4" cols="50">{"voice_path": "out\\2.mp3"}</textarea>
+    </div>
+    <button id="play_button" onclick="play()">发送数据</button>
     <script src="js/socket.io.js"></script>
     <script src="js/index.js"></script>
 </body>

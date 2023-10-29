@@ -169,9 +169,40 @@ function run() {
         });
 }
 
-// 停止运行
-function stop() {
+// 播放
+function play() {
+    let audio_json = document.getElementById('textarea_audio_json').value;
 
+    // 构建请求选项对象
+    const requestOptions = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json", // 指定请求体为JSON格式
+        },
+        body: JSON.stringify(audio_json), // 将JSON数据序列化为字符串并作为请求体
+    };
+
+    console.log(requestOptions)
+
+    // 构建完整的URL，包含查询参数
+    const url = `http://127.0.0.1:${server_port}/play`;
+
+    // 发送GET请求
+    fetch(url, requestOptions)
+        .then(function (response) {
+            if (response.ok) {
+                return response.json(); // 解析响应数据为JSON
+            }
+            throw new Error("网络响应失败");
+        })
+        .then(function (data) {
+            // 处理响应数据
+            console.log(data);
+        })
+        .catch(function (error) {
+            // 处理错误
+            console.error(error);
+        });
 }
 
 get_config();

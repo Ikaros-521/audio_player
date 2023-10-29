@@ -54,8 +54,10 @@ class AUDIO_PLAY_CENTER:
                 time.sleep(0.1)
                 continue
 
+            time.sleep(0.1)
+
             if self.audio_json_queue.qsize() > 0:
-                data_json = self.audio_json_queue.get()
+                data_json = self.audio_json_queue.get(block=True)
                 voice_path = data_json["voice_path"]
                 audio = AudioSegment.from_file(voice_path)
                 # 获取新的音频路径
@@ -89,6 +91,7 @@ class AUDIO_PLAY_CENTER:
     async def start_play_thread(self):
         logging.info("启动音频播放线程...")
         self.play_thread = threading.Thread(target=self.play_audio)
+        # self.play_thread.daemon = True
         self.play_thread.start()
         logging.info("启动音频播放线程")
 
