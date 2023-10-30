@@ -13,10 +13,17 @@
         </select>
     </div>
     <div>
-        <label for="input_rate">频率:</label> 
-        <input class="input_config_common" type="text" id="input_rate" placeholder="请输入对应声卡频率">
+        <label for="input_speed">播放速度:</label> 
+        <input class="input_config_common" type="text" id="input_speed" placeholder="请输入播放速度比例，例如原速度为：1">
     </div>
-    
+    <div>
+        <label>启用随机播放:</label> 
+        <input id="input_random_speed_enable" type="checkbox" value="1"/>
+        <label for="input_random_speed_min">速度下限:</label> 
+        <input class="input_config_common" type="text" id="input_random_speed_min" placeholder="请输入随机播放速度比例的最小值，例如减速为：0.8">
+        <label for="input_random_speed_max">速度上限:</label> 
+        <input class="input_config_common" type="text" id="input_random_speed_max" placeholder="请输入随机播放速度比例的最大值，例如加速为：1.3">
+    </div>
     <button id="get_deivce_button" onclick="get_deivce()">刷新声卡列表</button>
     <button id="save_button" onclick="save_config()">保存配置</button>
     <button id="run_button" onclick="run()">运行</button>
@@ -25,7 +32,6 @@
         <textarea id="textarea_audio_json" name="textarea_audio_json" rows="4" cols="50">{"voice_path": "out\\2.mp3"}</textarea>
     </div>
     <button id="play_button" onclick="play()">发送数据</button>
-    <script src="js/socket.io.js"></script>
     <script src="js/index.js"></script>
 </body>
 </html>

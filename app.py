@@ -29,7 +29,7 @@ if __name__ == '__main__':
 
     with open(config_file_path, 'r', encoding="utf-8") as file:
         config = json.load(file)
-    audio_play_center = AUDIO_PLAY_CENTER(int(config["device_index"]), int(config["rate"]))
+    audio_play_center = AUDIO_PLAY_CENTER(config)
 
     # 创建并启动服务器线程
     # server_thread = threading.Thread(target=lambda: asyncio.run(audio_play_center.start_play_thread()))
@@ -95,7 +95,7 @@ if __name__ == '__main__':
 
             try:
                 with open(config_file_path, 'w', encoding="utf-8") as config_file:
-                    json.dump(content, config_file, ensure_ascii=False)
+                    json.dump(content, config_file, indent=2, ensure_ascii=False)
                     config_file.flush()  # 刷新缓冲区，确保写入立即生效
 
                 logging.info("配置数据已成功写入文件！")

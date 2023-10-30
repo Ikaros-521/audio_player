@@ -4,6 +4,7 @@ import wave
 import threading
 import logging, time
 from queue import Queue
+import random
 
 from utils.common import Common
 from utils.logger import Configure_logger
@@ -11,7 +12,7 @@ from utils.logger import Configure_logger
 
 class AUDIO_PLAY_CENTER:
 
-    def __init__(self, device_index=0, rate=44100):
+    def __init__(self, config_data):
         self.common = Common()
 
         # 日志文件路径
@@ -21,8 +22,7 @@ class AUDIO_PLAY_CENTER:
         self.audio_out_path = "./out"
 
         self.audio = pyaudio.PyAudio()
-        self.device_index = device_index
-        self.rate = rate
+        self.config_data = config_data
         self.stream = None
         self.play_thread = None
         self.pause_event = threading.Event()  # 用于暂停音频播放
@@ -42,9 +42,6 @@ class AUDIO_PLAY_CENTER:
     def set_device_index(self, device_index: int):
         self.device_index = device_index
 
-    def set_rate(self, rate: int):
-        self.rate = rate
-
     def play_audio(self):
         # common = Common()
 
@@ -54,35 +51,40 @@ class AUDIO_PLAY_CENTER:
                 time.sleep(0.1)
                 continue
 
-            time.sleep(0.1)
+            # if self.audio_json_queue.qsize() > 0:
+            data_json = self.audio_json_queue.get(block=True)
+            voice_path = data_json["voice_path"]
+            audio = AudioSegment.from_file(voice_path)
+            # 获取新的音频路径
+            tmp_audio_path = self.common.get_new_audio_path(self.audio_out_path, file_name='tmp_' + self.common.get_bj_time(4) + '.wav')
+            audio.export(tmp_audio_path, format="wav")
+            wf = wave.open(tmp_audio_path, 'rb')
 
-            if self.audio_json_queue.qsize() > 0:
-                data_json = self.audio_json_queue.get(block=True)
-                voice_path = data_json["voice_path"]
-                audio = AudioSegment.from_file(voice_path)
-                # 获取新的音频路径
-                tmp_audio_path = self.common.get_new_audio_path(self.audio_out_path, file_name='tmp_' + self.common.get_bj_time(4) + '.wav')
-                audio.export(tmp_audio_path, format="wav")
-                wf = wave.open(tmp_audio_path, 'rb')
+            def callback(in_data, frame_count, time_info, status):
+                data = wf.readframes(frame_count)
+                return (data, pyaudio.paContinue)
 
-                def callback(in_data, frame_count, time_info, status):
-                    data = wf.readframes(frame_count)
-                    return (data, pyaudio.paContinue)
+            # 是否启用了随机播放功能
+            if self.config_data["random_speed"]["enable"]:
+                random_speed = random.uniform(self.config_data["random_speed"]["min"], self.config_data["random_speed"]["max"])
+                new_rate = int(wf.getframerate() * random_speed)
+            else:
+                new_rate = int(wf.getframerate() * self.config_data["speed"])
 
-                self.stream = self.audio.open(format=self.audio.get_format_from_width(wf.getsampwidth()),
-                                    channels=wf.getnchannels(),
-                                    rate=self.rate,
-                                    output=True,
-                                    output_device_index=self.device_index,
-                                    stream_callback=callback)
-                self.stream.start_stream()
+            self.stream = self.audio.open(format=self.audio.get_format_from_width(wf.getsampwidth()),
+                                channels=wf.getnchannels(),
+                                rate=new_rate,
+                                output=True,
+                                output_device_index=self.config_data["device_index"],
+                                stream_callback=callback)
+            self.stream.start_stream()
 
-                while self.stream.is_active() and not self.pause_event.is_set():
-                    pass  # 持续播放
+            while self.stream.is_active() and not self.pause_event.is_set():
+                pass  # 持续播放
 
-                self.stream.stop_stream()
-                self.stream.close()
-                wf.close()
+            self.stream.stop_stream()
+            self.stream.close()
+            wf.close()
 
     def add_audio_json(self, audio_json):
         self.audio_json_queue.put(audio_json)

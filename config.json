@@ -1,1 +1,9 @@
-{"device_index": "7", "rate": "44100"}
+{
+  "device_index": 7,
+  "random_speed": {
+    "enable": false,
+    "max": 1.3,
+    "min": 0.8
+  },
+  "speed": 1
+}

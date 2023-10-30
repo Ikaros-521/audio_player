@@ -32,7 +32,10 @@ function get_config() {
 
             config = data_json;
 
-            document.getElementById('input_rate').value = config.rate;
+            document.getElementById('input_speed').value = config["speed"];
+            document.getElementById('input_random_speed_enable').checked = config["random_speed"]["enable"];
+            document.getElementById('input_random_speed_min').value = config["random_speed"]["min"];
+            document.getElementById('input_random_speed_max').value = config["random_speed"]["max"];
         })
         .catch(function (error) {
             // 处理错误
@@ -97,8 +100,16 @@ function get_deivce() {
 
 // 保存配置
 function save_config() {
-    config.rate = document.getElementById('input_rate').value;
-    config.device_index = document.getElementById('select_device').value;
+    try {
+        config["device_index"] = parseInt(document.getElementById('select_device').value);
+        config["speed"] = parseFloat(document.getElementById('input_speed').value);
+        config["random_speed"]["enable"] = document.getElementById("input_random_speed_enable").checked;
+        config["random_speed"]["min"] = parseFloat(document.getElementById('input_random_speed_min').value);
+        config["random_speed"]["max"] = parseFloat(document.getElementById('input_random_speed_max').value);
+    } catch (error) {
+        console.error(error);
+        return;
+    }
 
     // 构建请求选项对象
     const requestOptions = {
@@ -134,7 +145,6 @@ function save_config() {
 
 // 运行
 function run() {
-    config.rate = document.getElementById('input_rate').value;
     config.device_index = document.getElementById('select_device').value;
 
     // 构建请求选项对象
