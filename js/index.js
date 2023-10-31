@@ -1,6 +1,10 @@
 const server_port = 5600;
 let config = null;
+let tipCounter = 0;
 
+/***
+ * 通用工具
+***/
 // 获取输入框中的值并转为整数
 function getNumber(input, defaultValue = 0) {
     let value = input.value;
@@ -12,7 +16,29 @@ function getNumber(input, defaultValue = 0) {
 
     return number;
 }
+
+function showtip(type, text, timeout=3000) {
+    const tip = document.createElement("div");
+    tip.className = "tip";
+    tip.style.bottom = `${tipCounter * 40}px`; // 垂直定位
+    tip.innerText = text;
+    if (type == "error") {
+      tip.style.backgroundColor = "#ff0000";
+    }
+
+    document.body.appendChild(tip);
+
+    setTimeout(function () {
+      document.body.removeChild(tip);
+      tipCounter--;
+    }, timeout);
+
+    tipCounter++;
+  }
  
+/***
+ * 后端相关
+***/
 // 获取当前配置
 function get_config() {
     var url = `http://127.0.0.1:${server_port}/get_config`;
@@ -27,6 +53,7 @@ function get_config() {
         .then(function (data) {
             // 处理响应数据
             console.log(data);
+            showtip("info", "获取当前配置成功");
 
             var data_json = JSON.parse(data);
 
@@ -40,6 +67,7 @@ function get_config() {
         .catch(function (error) {
             // 处理错误
             console.error(error);
+            showtip("error", error.toString());
         });
 }
 
@@ -57,6 +85,7 @@ function get_deivce() {
         .then(function (data) {
             // 处理响应数据
             // console.log(data);
+            showtip("info", "获取获取声卡设备列表成功");
 
             var data_json = JSON.parse(data);
 
@@ -95,6 +124,7 @@ function get_deivce() {
         .catch(function (error) {
             // 处理错误
             console.error(error);
+            showtip("error", error.toString());
         });
 }
 
@@ -108,6 +138,7 @@ function save_config() {
         config["random_speed"]["max"] = parseFloat(document.getElementById('input_random_speed_max').value);
     } catch (error) {
         console.error(error);
+        showtip("error", error.toString());
         return;
     }
 
@@ -120,7 +151,7 @@ function save_config() {
         body: JSON.stringify(config), // 将JSON数据序列化为字符串并作为请求体
     };
 
-    console.log(requestOptions)
+    console.log(requestOptions);
 
     // 构建完整的URL，包含查询参数
     const url = `http://127.0.0.1:${server_port}/save_config`;
@@ -136,16 +167,22 @@ function save_config() {
         .then(function (data) {
             // 处理响应数据
             console.log(data);
+            showtip("info", "保存配置成功");
         })
         .catch(function (error) {
             // 处理错误
             console.error(error);
+            showtip("error", error.toString());
         });
 }
 
 // 运行
 function run() {
-    config.device_index = document.getElementById('select_device').value;
+    config["device_index"] = parseInt(document.getElementById('select_device').value);
+    config["speed"] = parseFloat(document.getElementById('input_speed').value);
+    config["random_speed"]["enable"] = document.getElementById("input_random_speed_enable").checked;
+    config["random_speed"]["min"] = parseFloat(document.getElementById('input_random_speed_min').value);
+    config["random_speed"]["max"] = parseFloat(document.getElementById('input_random_speed_max').value);
 
     // 构建请求选项对象
     const requestOptions = {
@@ -156,7 +193,7 @@ function run() {
         body: JSON.stringify(config), // 将JSON数据序列化为字符串并作为请求体
     };
 
-    console.log(requestOptions)
+    console.log(requestOptions);
 
     // 构建完整的URL，包含查询参数
     const url = `http://127.0.0.1:${server_port}/run`;
@@ -172,10 +209,12 @@ function run() {
         .then(function (data) {
             // 处理响应数据
             console.log(data);
+            showtip("info", "重新运行...");
         })
         .catch(function (error) {
             // 处理错误
             console.error(error);
+            showtip("error", error.toString());
         });
 }
 
@@ -192,7 +231,7 @@ function play() {
         body: JSON.stringify(audio_json), // 将JSON数据序列化为字符串并作为请求体
     };
 
-    console.log(requestOptions)
+    console.log(requestOptions);
 
     // 构建完整的URL，包含查询参数
     const url = `http://127.0.0.1:${server_port}/play`;
@@ -208,10 +247,42 @@ function play() {
         .then(function (data) {
             // 处理响应数据
             console.log(data);
+            showtip("info", "发送数据成功");
         })
         .catch(function (error) {
             // 处理错误
             console.error(error);
+            showtip("error", error.toString());
+        });
+}
+
+// 暂停/恢复播放
+function pause_stream(status) {
+    if (status == 1) 
+        var url = `http://127.0.0.1:${server_port}/pause_stream`;
+    else
+        var url = `http://127.0.0.1:${server_port}/resume_stream`;
+
+
+    fetch(url)
+        .then(function (response) {
+            if (response.ok) {
+                return response.text();
+            }
+            throw new Error("网络响应失败");
+        })
+        .then(function (data) {
+            // 处理响应数据
+            console.log(data);
+            if (status == 1) 
+            showtip("info", "暂停播放成功");
+            else
+                showtip("info", "恢复播放成功");
+        })
+        .catch(function (error) {
+            // 处理错误
+            console.error(error);
+            showtip("error", error.toString());
         });
 }
 

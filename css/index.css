@@ -104,6 +104,33 @@ input[type="password"]:focus {
   margin: 5px 5px 5px 1px !important;
 }
 
+/* 美化textarea */
+textarea {
+  padding: 10px; /* 设置内边距 */
+  border: 1px solid #ccc; /* 设置边框样式 */
+  border-radius: 5px; /* 设置圆角 */
+  font-size: 16px; /* 设置字体大小 */
+  min-width: 500px;
+}
+
+/* 悬停效果 */
+textarea:hover {
+  border-color: #333; /* 悬停时的边框颜色 */
+}
+
+/* 聚焦效果 */
+textarea:focus {
+  outline: none; /* 移除默认的轮廓样式 */
+  border-color: #007bff; /* 聚焦时的边框颜色 */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* 添加阴影效果 */
+}
+
+.textarea_config_common {
+  min-width: 100px !important;
+  width: 500px !important;
+  margin: 5px 5px 5px 1px !important;
+}
+
 /* 美化按钮 */
 button {
   padding: 10px 20px; /* 设置内边距 */
@@ -124,4 +151,45 @@ button:hover {
 button:disabled {
   background-color: #ccc; /* 禁用状态的背景颜色 */
   cursor: not-allowed; /* 禁用状态的鼠标样式 */
+}
+
+label {
+  text-align: right;
+  vertical-align: middle;
+  font-size: 14px;
+  color: #606266;
+  line-height: 40px;
+  padding: 0 12px 0 0;
+  box-sizing: border-box;
+}
+
+input[type="checkbox"] {
+  display: inline-block;
+  position: relative;
+  border: 1px solid #dcdfe6;
+  border-radius: 2px;
+  box-sizing: border-box;
+  width: 14px;
+  height: 14px;
+  background-color: #fff;
+  z-index: 1;
+  transition: border-color .25s cubic-bezier(.71,-.46,.29,1.46),background-color .25s cubic-bezier(.71,-.46,.29,1.46);
+}
+
+.tip {
+  position: fixed;
+  left: 0px;
+  background-color: #4caf50;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  width: 100%;
+}
+
+.code-block {
+  background-color: #f4f4f4;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  overflow-x: auto;
 }

@@ -7,10 +7,12 @@
     <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
+    <h2>功能配置</h2>
     <div>
         <label for="input_fontFamily">输出声卡:</label> 
         <select id="select_device">
         </select>
+        <button id="get_deivce_button" onclick="get_deivce()">刷新声卡列表</button>
     </div>
     <div>
         <label for="input_speed">播放速度:</label> 
@@ -24,14 +26,58 @@
         <label for="input_random_speed_max">速度上限:</label> 
         <input class="input_config_common" type="text" id="input_random_speed_max" placeholder="请输入随机播放速度比例的最大值，例如加速为：1.3">
     </div>
-    <button id="get_deivce_button" onclick="get_deivce()">刷新声卡列表</button>
-    <button id="save_button" onclick="save_config()">保存配置</button>
-    <button id="run_button" onclick="run()">运行</button>
     <div>
         <label for="textarea_audio_json">播放音频数据：</label>
-        <textarea id="textarea_audio_json" name="textarea_audio_json" rows="4" cols="50">{"voice_path": "out\\2.mp3"}</textarea>
+        <br>
+        <textarea class="textarea_config_common" id="textarea_audio_json" name="textarea_audio_json" rows="4" cols="50">{"voice_path": "out\\2.mp3"}</textarea>
+        <button id="play_button" onclick="play()" style="position: relative; bottom: 20px;">发送数据</button>
     </div>
-    <button id="play_button" onclick="play()">发送数据</button>
+    <div>
+        <button id="save_button" onclick="save_config()">保存配置</button>
+        <button id="run_button" onclick="run()">重新运行</button>
+        <button id="pause_stream_button" onclick="pause_stream(1)">暂停播放</button>
+        <button id="resume_stream_button" onclick="pause_stream(0)">恢复播放</button>
+    </div>
+    <div>
+        <h2>API</h2>
+        <section>
+            <h3>添加音频数据到播放队列</h3>
+            <p>使用 POST 请求到以下 URL：</p>
+            <code>http://127.0.0.1:5600/play</code>
+            <p>请求体：</p>
+            <pre class="code-block">
+                <code>
+{
+    "device_index": 5,
+    "random_speed": {
+        "enable": false,
+        "max": 1.3,
+        "min": 0.8
+    },
+    "speed": 1
+}
+                </code>
+            </pre>
+            <p>参数说明：</p>
+            <ul>
+                <li><strong>device_index：</strong> 声卡设备索引值</li>
+                <li><strong>random_speed enable：</strong> 启用随机播放功能</li>
+                <li><strong>random_speed max：</strong> 随机播放的最大速度</li>
+                <li><strong>random_speed min：</strong> 随机播放的最小速度</li>
+                <li><strong>speed：</strong> 播放速度</li>
+            </ul>
+        </section>
+        <section>
+            <h3>暂停播放</h3>
+            <p>使用 GET 请求到以下 URL：</p>
+            <code>http://127.0.0.1:5600/pause_stream</code>
+        </section>
+        <section>
+            <h3>恢复播放</h3>
+            <p>使用 GET 请求到以下 URL：</p>
+            <code>http://127.0.0.1:5600/resume_stream</code>
+        </section>
+    </div>
     <script src="js/index.js"></script>
 </body>
 </html>

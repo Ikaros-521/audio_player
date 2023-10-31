@@ -77,6 +77,7 @@ class AUDIO_PLAY_CENTER:
                                 output=True,
                                 output_device_index=self.config_data["device_index"],
                                 stream_callback=callback)
+            
             self.stream.start_stream()
 
             while self.stream.is_active() and not self.pause_event.is_set():
