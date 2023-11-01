@@ -73,7 +73,7 @@ if __name__ == '__main__':
 
             return jsonify(all_audio_device_info)
         except Exception as e:
-            return jsonify({"code": -1, "message": f"获取所有声卡信息失败\n{e}"})
+            return jsonify({"code": -1, "message": f"获取所有声卡信息失败{e}"})
 
     @app.route('/get_config', methods=['GET'])
     def get_config():
@@ -85,7 +85,7 @@ if __name__ == '__main__':
 
             return jsonify(data)
         except Exception as e:
-            return jsonify({"code": -1, "message": f"获取本地配置失败\n{e}"})
+            return jsonify({"code": -1, "message": f"获取本地配置失败{e}"})
         
     @app.route('/save_config', methods=['POST'])
     def save_config():
@@ -101,13 +101,33 @@ if __name__ == '__main__':
                 logging.info("配置数据已成功写入文件！")
                 return jsonify({"code": 200, "message": "配置数据已成功写入文件！"})
             except Exception as e:
-                logging.error(f"无法写入配置文件！\n{e}")
-                return jsonify({"code": -1, "message": "无法写入配置文件！\n{e}"})
+                logging.error(f"无法写入配置文件！{e}")
+                return jsonify({"code": -1, "message": "无法写入配置文件！{e}"})
 
             
         except Exception as e:
-            return jsonify({"code": -1, "message": f"无法写入配置文件！\n{e}"})
+            return jsonify({"code": -1, "message": f"无法写入配置文件！{e}"})
 
+    @app.route('/clear', methods=['GET'])
+    def clear():
+        try:
+            audio_play_center.clear_audio_json_queue()
+
+            return jsonify({"code": 200, "message": "清空队列成功！"})
+        except Exception as e:
+            return jsonify({"code": -1, "message": f"清空队列失败！{e}"})
+
+    @app.route('/get_list', methods=['GET'])
+    def get_list():
+        try:
+            json_str = audio_play_center.get_audio_json_queue_list()
+            data_json = json.loads(json_str)
+
+            return jsonify({"code": 200, "message": data_json})
+        except Exception as e:
+            return jsonify({"code": -1, "message": f"清空队列失败！{e}"})
+
+    
     @app.route('/run', methods=['POST'])
     def run():
         global audio_play_center
@@ -122,31 +142,31 @@ if __name__ == '__main__':
                 logging.info("配置数据已成功写入文件！")
                 return jsonify({"code": 200, "message": "配置数据已成功写入文件！"})
             except Exception as e:
-                logging.error(f"无法写入配置文件！\n{e}")
-                return jsonify({"code": -1, "message": "无法写入配置文件！\n{e}"})
+                logging.error(f"无法写入配置文件！{e}")
+                return jsonify({"code": -1, "message": "无法写入配置文件！{e}"})
 
         except Exception as e:
-            return jsonify({"code": -1, "message": f"无法写入配置文件！\n{e}"})
+            return jsonify({"code": -1, "message": f"无法写入配置文件！{e}"})
 
     @app.route('/play', methods=['POST'])
     def play():
         global audio_play_center
 
         try:
-            content = request.get_json()
-            logging.info(content)
-
             try:
-                audio_play_center.add_audio_json(json.loads(content))
+                content = request.get_json()
+                logging.info(content)
+
+                audio_play_center.add_audio_json(content)
 
                 logging.info("添加音频信息成功！")
                 return jsonify({"code": 200, "message": "添加音频信息成功！"})
             except Exception as e:
-                logging.error(f"添加音频信息失败！\n{e}")
-                return jsonify({"code": -1, "message": "添加音频信息失败！\n{e}"})
+                logging.error(f"添加音频信息失败！{e}")
+                return jsonify({"code": -1, "message": f"添加音频信息失败！{e}"})
 
         except Exception as e:
-            return jsonify({"code": -1, "message": f"添加音频信息失败！\n{e}"})
+            return jsonify({"code": -1, "message": f"添加音频信息失败！{e}"})
 
     @app.route('/pause_stream', methods=['GET'])
     def pause_stream():
@@ -155,7 +175,7 @@ if __name__ == '__main__':
 
             return jsonify({"code": 200, "message": "暂停成功！"})
         except Exception as e:
-            return jsonify({"code": -1, "message": f"暂停失败！\n{e}"})
+            return jsonify({"code": -1, "message": f"暂停失败！{e}"})
         
     @app.route('/resume_stream', methods=['GET'])
     def resume_stream():
@@ -164,7 +184,18 @@ if __name__ == '__main__':
 
             return jsonify({"code": 200, "message": "恢复成功！"})
         except Exception as e:
-            return jsonify({"code": -1, "message": f"恢复失败！\n{e}"})
+            return jsonify({"code": -1, "message": f"恢复失败！{e}"})
+
+    @app.route('/skip_current_stream', methods=['GET'])
+    def skip_current_stream():
+        try:
+            audio_play_center.skip_current_stream()
+
+            return jsonify({"code": 200, "message": "跳过当前播放文件成功！"})
+        except Exception as e:
+            return jsonify({"code": -1, "message": f"跳过当前播放文件失败！{e}"})
+
+
 
     port = 5600
     url = f'http://localhost:{port}/index.html'

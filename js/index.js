@@ -228,7 +228,7 @@ function play() {
         headers: {
             "Content-Type": "application/json", // 指定请求体为JSON格式
         },
-        body: JSON.stringify(audio_json), // 将JSON数据序列化为字符串并作为请求体
+        body: audio_json,
     };
 
     console.log(requestOptions);
@@ -275,9 +275,80 @@ function pause_stream(status) {
             // 处理响应数据
             console.log(data);
             if (status == 1) 
-            showtip("info", "暂停播放成功");
+                showtip("info", "暂停播放成功");
             else
                 showtip("info", "恢复播放成功");
+        })
+        .catch(function (error) {
+            // 处理错误
+            console.error(error);
+            showtip("error", error.toString());
+        });
+}
+
+// 跳过当前播放
+function skip_current_stream() {
+    var url = `http://127.0.0.1:${server_port}/skip_current_stream`;
+
+
+    fetch(url)
+        .then(function (response) {
+            if (response.ok) {
+                return response.text();
+            }
+            throw new Error("网络响应失败");
+        })
+        .then(function (data) {
+            // 处理响应数据
+            console.log(data);
+            
+            showtip("info", "跳过当前播放成功");
+        })
+        .catch(function (error) {
+            // 处理错误
+            console.error(error);
+            showtip("error", error.toString());
+        });
+}
+
+function clear_list() {
+    var url = `http://127.0.0.1:${server_port}/clear`;
+
+
+    fetch(url)
+        .then(function (response) {
+            if (response.ok) {
+                return response.text();
+            }
+            throw new Error("网络响应失败");
+        })
+        .then(function (data) {
+            // 处理响应数据
+            console.log(data);
+            showtip("info", "清空播放队列成功");
+        })
+        .catch(function (error) {
+            // 处理错误
+            console.error(error);
+            showtip("error", error.toString());
+        });
+}
+
+function get_list() {
+    var url = `http://127.0.0.1:${server_port}/get_list`;
+
+
+    fetch(url)
+        .then(function (response) {
+            if (response.ok) {
+                return response.text();
+            }
+            throw new Error("网络响应失败");
+        })
+        .then(function (data) {
+            // 处理响应数据
+            console.log(data);
+            showtip("info", "获取播放队列列表成功");
         })
         .catch(function (error) {
             // 处理错误

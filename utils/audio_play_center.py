@@ -5,6 +5,7 @@ import threading
 import logging, time
 from queue import Queue
 import random
+import json
 
 from utils.common import Common
 from utils.logger import Configure_logger
@@ -27,20 +28,6 @@ class AUDIO_PLAY_CENTER:
         self.play_thread = None
         self.pause_event = threading.Event()  # 用于暂停音频播放
         self.audio_json_queue = Queue()
-
-    def get_all_audio_device_info(self):
-        device_infos = []
-        device_count = self.audio.get_device_count()
-
-        for device_index in range(device_count):
-            device_info = self.audio.get_device_info_by_index(device_index)
-            if device_info['maxOutputChannels'] > 0:
-                device_infos.append({"device_index": device_index, "device_info": device_info['name']})
-
-        return device_infos
-
-    def set_device_index(self, device_index: int):
-        self.device_index = device_index
 
     def play_audio(self):
         # common = Common()
@@ -87,10 +74,6 @@ class AUDIO_PLAY_CENTER:
             self.stream.close()
             wf.close()
 
-    def add_audio_json(self, audio_json):
-        self.audio_json_queue.put(audio_json)
-        logging.info(f"添加音频数据={audio_json}")
-
     async def start_play_thread(self):
         logging.info("启动音频播放线程...")
         self.play_thread = threading.Thread(target=self.play_audio)
@@ -98,8 +81,57 @@ class AUDIO_PLAY_CENTER:
         self.play_thread.start()
         logging.info("启动音频播放线程")
 
+    """
+    配置相关
+    """
+    def get_all_audio_device_info(self):
+        device_infos = []
+        device_count = self.audio.get_device_count()
+
+        for device_index in range(device_count):
+            device_info = self.audio.get_device_info_by_index(device_index)
+            if device_info['maxOutputChannels'] > 0:
+                device_infos.append({"device_index": device_index, "device_info": device_info['name']})
+
+        return device_infos
+
+    def set_device_index(self, device_index: int):
+        self.device_index = device_index
+
+    """
+    数据相关
+    """
+    def add_audio_json(self, audio_json):
+        self.audio_json_queue.put(audio_json)
+        logging.info(f"添加音频数据={audio_json}")
+
+    def clear_audio_json_queue(self):
+        self.audio_json_queue.queue.clear()
+        logging.info("清空音频数据队列")
+
+    def get_audio_json_queue_list(self):
+        # 获取队列中的数据，但不出队列
+        queue_data = list(self.audio_json_queue.queue)
+
+        # 查看获取的数据
+        # 创建一个包含队列数据的字典
+        json_data = {"list": []}
+        for item in queue_data:
+            json_data["list"].append(item)
+
+        # 将数据存入 JSON 格式
+        json_str = json.dumps(json_data)
+
+        return json_str
+
+    """
+    播放相关控制
+    """
     def pause_stream(self):
         self.pause_event.set()
+        if self.stream:
+            self.stream.stop_stream()
+            self.stream.close()
 
     def resume_stream(self):
         self.pause_event.clear()
@@ -110,6 +142,10 @@ class AUDIO_PLAY_CENTER:
             self.stream.stop_stream()
             self.stream.close()
         self.audio_json_queue.queue.clear()  # 清空音频队列
+
+    def skip_current_stream(self):
+        self.pause_stream()
+        self.resume_stream()
 
 
 if __name__ == '__main__':
@@ -137,6 +173,5 @@ if __name__ == '__main__':
     # 等待一段时间后中断播放
     time.sleep(3)
     audio_play_center.stop_stream()
-
 
     audio_play_center.terminate_audio()
