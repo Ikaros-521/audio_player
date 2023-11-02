@@ -1,3 +1,7 @@
+body {
+  background: linear-gradient(45deg, #3494E6, #EC6EAD);
+}
+
 /* 隐藏默认的单选框 */
 input[type="radio"] {
     display: none;
@@ -100,7 +104,7 @@ input[type="password"]:focus {
 
 .input_config_common {
   min-width: 50px !important;
-  width: 150px !important;
+  width: 150px;
   margin: 5px 5px 5px 1px !important;
 }
 
@@ -157,7 +161,7 @@ label {
   text-align: right;
   vertical-align: middle;
   font-size: 14px;
-  color: #606266;
+  color: #000000;
   line-height: 40px;
   padding: 0 12px 0 0;
   box-sizing: border-box;

@@ -5,6 +5,10 @@ from datetime import timedelta
 from datetime import timezone
 import pyaudio
 import os
+import requests
+import json
+import logging
+import traceback
 
 class Common:
     # 获取北京时间
@@ -103,3 +107,39 @@ class Common:
                 index += 1
 
         return device_infos
+    
+    # 请求web字幕打印机
+    def send_to_web_captions_printer(self, api_ip_port, data):
+        """请求web字幕打印机
+
+        Args:
+            api_ip_port (str): api请求地址
+            data (dict): 包含用户名,弹幕内容
+
+        Returns:
+            bool: True/False
+        """
+
+        # user_name = data["username"]
+        content = data["content"]
+
+        # 记录数据库):
+        try:
+            response = requests.get(url=api_ip_port + f'/send_message?content={content}')
+            response.raise_for_status()  # 检查响应的状态码
+
+            result = response.content
+            ret = json.loads(result)
+
+            logging.debug(ret)
+
+            if ret['code'] == 200:
+                logging.debug(ret['message'])
+                return True
+            else:
+                logging.error(ret['message'])
+                return False
+        except Exception as e:
+            logging.error('web字幕打印机请求失败！请确认配置是否正确或者服务端是否运行！')
+            logging.error(traceback.format_exc())
+            return False

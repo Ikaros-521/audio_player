@@ -7,6 +7,7 @@ from queue import Queue
 import random
 import json
 import traceback
+import requests
 
 from utils.common import Common
 from utils.logger import Configure_logger
@@ -29,6 +30,7 @@ class AUDIO_PLAY_CENTER:
         self.play_thread = None
         self.pause_event = threading.Event()  # 用于暂停音频播放
         self.audio_json_queue = Queue()
+        
 
     def play_audio(self):
         # common = Common()
@@ -66,6 +68,11 @@ class AUDIO_PLAY_CENTER:
                                     output=True,
                                     output_device_index=self.config_data["device_index"],
                                     stream_callback=callback)
+                
+                # 是否启用了web字幕打印机的对接
+                if self.config_data["captions_printer"]["enable"]:
+                    if "content" in data_json:
+                        self.common.send_to_web_captions_printer(self.config_data["captions_printer"]["api_ip_port"], data_json)
                 
                 self.stream.start_stream()
 

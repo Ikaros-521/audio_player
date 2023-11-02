@@ -63,6 +63,11 @@ function get_config() {
             document.getElementById('input_random_speed_enable').checked = config["random_speed"]["enable"];
             document.getElementById('input_random_speed_min').value = config["random_speed"]["min"];
             document.getElementById('input_random_speed_max').value = config["random_speed"]["max"];
+            document.getElementById('input_captions_printer_enable').checked = config["captions_printer"]["enable"];
+            document.getElementById('input_captions_printer_api_ip_port').value = config["captions_printer"]["api_ip_port"];
+
+            // 获取声卡设备列表
+            get_deivce();
         })
         .catch(function (error) {
             // 处理错误
@@ -136,6 +141,9 @@ function save_config() {
         config["random_speed"]["enable"] = document.getElementById("input_random_speed_enable").checked;
         config["random_speed"]["min"] = parseFloat(document.getElementById('input_random_speed_min').value);
         config["random_speed"]["max"] = parseFloat(document.getElementById('input_random_speed_max').value);
+        config["captions_printer"]["enable"] = document.getElementById('input_captions_printer_enable').checked;
+        config["captions_printer"]["api_ip_port"] = document.getElementById('input_captions_printer_api_ip_port').value;
+
     } catch (error) {
         console.error(error);
         showtip("error", error.toString());
@@ -358,4 +366,4 @@ function get_list() {
 }
 
 get_config();
-get_deivce();
+

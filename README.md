@@ -6,6 +6,7 @@
 开发系统：win11  
 python：3.10  
 安装依赖：`pip install -r requirements.txt`  
+其他依赖：ffmpeg  
 运行：`python app.py`  
 浏览器访问：`http://127.0.0.1:5600/index.html`  
 
@@ -22,14 +23,14 @@ python：3.10
       <code>
 {
   "voice_path": "out\\2.mp3",
-  "content": "音频文本内容，预留字段，暂未使用"
+  "content": "音频文本内容"
 }
       </code>
   </pre>
   <p>参数说明：</p>
   <ul>
       <li><strong>voice_path：</strong> 音频文件路径</li>
-      <li><strong>content：</strong> 音频文本内容，预留字段，暂未使用</li>
+      <li><strong>content：</strong> 音频文本内容</li>
   </ul>
   <p>返回数据：</p>
   <pre class="code-block">
@@ -95,6 +96,8 @@ python：3.10
       <li><strong>random_speed max：</strong> 随机播放的最大速度</li>
       <li><strong>random_speed min：</strong> 随机播放的最小速度</li>
       <li><strong>speed：</strong> 播放速度</li>
+      <li><strong>captions_printer enable：</strong> 启用对接web字幕打印机</li>
+      <li><strong>captions_printer api_ip_port：</strong> web字幕打印机服务的API地址</li>
   </ul>
 </section>
 
@@ -106,6 +109,8 @@ python：3.10
 
 - 2023-11-02
   - 给播放线程追加异常捕获，起码不会直接挂了
+  - 新增web字幕打印机的对接
+  - 美化UI
 
 - 2023-11-01
   - 新增跳过当前播放、清空播放队列和获取播放队列功能
