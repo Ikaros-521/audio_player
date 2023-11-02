@@ -6,6 +6,7 @@ import logging, time
 from queue import Queue
 import random
 import json
+import traceback
 
 from utils.common import Common
 from utils.logger import Configure_logger
@@ -33,46 +34,49 @@ class AUDIO_PLAY_CENTER:
         # common = Common()
 
         while True:
-            # 暂停事件阻塞
-            if self.pause_event.is_set():
-                time.sleep(0.1)
-                continue
+            try:
+                # 暂停事件阻塞
+                if self.pause_event.is_set():
+                    time.sleep(0.1)
+                    continue
 
-            # if self.audio_json_queue.qsize() > 0:
-            data_json = self.audio_json_queue.get(block=True)
-            voice_path = data_json["voice_path"]
-            audio = AudioSegment.from_file(voice_path)
-            # 获取新的音频路径
-            tmp_audio_path = self.common.get_new_audio_path(self.audio_out_path, file_name='tmp_' + self.common.get_bj_time(4) + '.wav')
-            audio.export(tmp_audio_path, format="wav")
-            wf = wave.open(tmp_audio_path, 'rb')
+                # if self.audio_json_queue.qsize() > 0:
+                data_json = self.audio_json_queue.get(block=True)
+                voice_path = data_json["voice_path"]
+                audio = AudioSegment.from_file(voice_path)
+                # 获取新的音频路径
+                tmp_audio_path = self.common.get_new_audio_path(self.audio_out_path, file_name='tmp_' + self.common.get_bj_time(4) + '.wav')
+                audio.export(tmp_audio_path, format="wav")
+                wf = wave.open(tmp_audio_path, 'rb')
 
-            def callback(in_data, frame_count, time_info, status):
-                data = wf.readframes(frame_count)
-                return (data, pyaudio.paContinue)
+                def callback(in_data, frame_count, time_info, status):
+                    data = wf.readframes(frame_count)
+                    return (data, pyaudio.paContinue)
 
-            # 是否启用了随机播放功能
-            if self.config_data["random_speed"]["enable"]:
-                random_speed = random.uniform(self.config_data["random_speed"]["min"], self.config_data["random_speed"]["max"])
-                new_rate = int(wf.getframerate() * random_speed)
-            else:
-                new_rate = int(wf.getframerate() * self.config_data["speed"])
+                # 是否启用了随机播放功能
+                if self.config_data["random_speed"]["enable"]:
+                    random_speed = random.uniform(self.config_data["random_speed"]["min"], self.config_data["random_speed"]["max"])
+                    new_rate = int(wf.getframerate() * random_speed)
+                else:
+                    new_rate = int(wf.getframerate() * self.config_data["speed"])
 
-            self.stream = self.audio.open(format=self.audio.get_format_from_width(wf.getsampwidth()),
-                                channels=wf.getnchannels(),
-                                rate=new_rate,
-                                output=True,
-                                output_device_index=self.config_data["device_index"],
-                                stream_callback=callback)
-            
-            self.stream.start_stream()
+                self.stream = self.audio.open(format=self.audio.get_format_from_width(wf.getsampwidth()),
+                                    channels=wf.getnchannels(),
+                                    rate=new_rate,
+                                    output=True,
+                                    output_device_index=self.config_data["device_index"],
+                                    stream_callback=callback)
+                
+                self.stream.start_stream()
 
-            while self.stream.is_active() and not self.pause_event.is_set():
-                pass  # 持续播放
+                while self.stream.is_active() and not self.pause_event.is_set():
+                    pass  # 持续播放
 
-            self.stream.stop_stream()
-            self.stream.close()
-            wf.close()
+                self.stream.stop_stream()
+                self.stream.close()
+                wf.close()
+            except Exception as e:
+                logging.error(traceback.format_exc())
 
     async def start_play_thread(self):
         logging.info("启动音频播放线程...")
