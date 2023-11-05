@@ -3,7 +3,7 @@
     "api_ip_port": "http://127.0.0.1:5500",
     "enable": true
   },
-  "device_index": 1,
+  "device_index": 7,
   "random_speed": {
     "enable": false,
     "max": 1.3,

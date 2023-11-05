@@ -34,7 +34,7 @@ function showtip(type, text, timeout=3000) {
     }, timeout);
 
     tipCounter++;
-  }
+}
  
 /***
  * 后端相关

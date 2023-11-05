@@ -11,6 +11,9 @@ python：3.10
 浏览器访问：`http://127.0.0.1:5600/index.html`  
 
 ## 整合包
+
+github：[https://github.com/Ikaros-521/audio_player/releases](https://github.com/Ikaros-521/audio_player/releases)  
+夸克：[https://pan.quark.cn/s/a0cf8d59d9ad](https://pan.quark.cn/s/a0cf8d59d9ad)  
  
 ## API
 
