@@ -47,6 +47,11 @@ class AUDIO_PLAY_CENTER:
                     time.sleep(0.1)
                     continue
 
+                if self.stream and self.stream.is_active():
+                    time.sleep(0.1)
+                    # 如果当前有活跃的流，则继续播放，不获取新的音频数据
+                    continue
+
                 if len(self.audio_json_list) <= 0:
                     self.audio_data_event.clear()  # 没有数据，清除事件
                     self.audio_data_event.wait()  # 等待新数据
@@ -89,9 +94,9 @@ class AUDIO_PLAY_CENTER:
                 while self.stream.is_active() and not self.pause_event.is_set():
                     pass  # 持续播放
 
-                self.stream.stop_stream()
-                self.stream.close()
-                wf.close()
+                # self.stream.stop_stream()
+                # self.stream.close()
+                # wf.close()
             except AttributeError as e:
                 # 处理异常
                 logging.error(traceback.format_exc())
@@ -153,21 +158,35 @@ class AUDIO_PLAY_CENTER:
         self.pause_event.set()
         if self.stream:
             self.stream.stop_stream()
-            self.stream.close()
 
     def resume_stream(self):
-        self.pause_event.clear()
+        if self.pause_event.is_set():
+            self.pause_event.clear()
+            if self.stream:
+                self.stream.start_stream()
 
-    def stop_stream(self):
+    def stop_stream_and_clear(self):
         self.pause_event.set()
         if self.stream:
             self.stream.stop_stream()
             self.stream.close()
-        self.audio_json_list.clear()  # 清空列表
+            self.stream = None
+        self.audio_json_list.clear()
 
     def skip_current_stream(self):
-        self.pause_stream()
-        self.resume_stream()
+        with self.list_lock:
+            if self.stream and (self.stream.is_active() or self.pause_event.is_set()):
+                # 停止并关闭当前流，无论是否处于暂停状态
+                self.stream.stop_stream()
+                self.stream.close()
+                self.stream = None
+
+            # 清除暂停事件，以便继续播放下一个音频
+            self.pause_event.clear()
+
+            # 设置事件以确保从列表中取出下一个音频（如果有）
+            if len(self.audio_json_list) > 0:
+                self.audio_data_event.set()
 
 
 if __name__ == '__main__':
