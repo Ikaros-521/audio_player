@@ -1,7 +1,7 @@
 {
   "captions_printer": {
     "api_ip_port": "http://127.0.0.1:5500",
-    "enable": true
+    "enable": false
   },
   "device_index": 5,
   "random_speed": {

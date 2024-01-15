@@ -3,7 +3,7 @@ from pydub import AudioSegment
 import wave
 import threading
 import logging, time
-from queue import Queue
+import threading
 import random
 import json
 import traceback
@@ -28,8 +28,13 @@ class AUDIO_PLAY_CENTER:
         self.config_data = config_data
         self.stream = None
         self.play_thread = None
+
         self.pause_event = threading.Event()  # 用于暂停音频播放
-        self.audio_json_queue = Queue()
+        self.audio_data_event = threading.Event()  # 用于在有新数据时通知线程
+
+        self.audio_json_list = []  # 使用列表替换原先的队列
+
+        self.list_lock = threading.Lock()  # 列表操作的锁
         
 
     def play_audio(self):
@@ -42,8 +47,13 @@ class AUDIO_PLAY_CENTER:
                     time.sleep(0.1)
                     continue
 
-                # if self.audio_json_queue.qsize() > 0:
-                data_json = self.audio_json_queue.get(block=True)
+                if len(self.audio_json_list) <= 0:
+                    self.audio_data_event.clear()  # 没有数据，清除事件
+                    self.audio_data_event.wait()  # 等待新数据
+                    continue
+
+                with self.list_lock:  # 使用锁保护列表操作
+                    data_json = self.audio_json_list.pop(0)  # 从列表中获取第一个元素并删除
                 voice_path = data_json["voice_path"]
                 audio = AudioSegment.from_file(voice_path)
                 # 获取新的音频路径
@@ -82,6 +92,13 @@ class AUDIO_PLAY_CENTER:
                 self.stream.stop_stream()
                 self.stream.close()
                 wf.close()
+            except AttributeError as e:
+                # 处理异常
+                logging.error(traceback.format_exc())
+                # 初始化核心变量
+                self.audio = pyaudio.PyAudio()
+                self.stream = None
+                self.audio_json_list = []  # 重置列表
             except Exception as e:
                 logging.error(traceback.format_exc())
 
@@ -113,26 +130,20 @@ class AUDIO_PLAY_CENTER:
     数据相关
     """
     def add_audio_json(self, audio_json):
-        self.audio_json_queue.put(audio_json)
+        with self.list_lock:  # 使用锁保护列表操作
+            self.audio_json_list.append(audio_json)  # 将音频数据添加到列表
+        self.audio_data_event.set()  # 有新数据，设置事件
         logging.info(f"添加音频数据={audio_json}")
 
-    def clear_audio_json_queue(self):
-        self.audio_json_queue.queue.clear()
+    def clear_audio_json(self):
+        with self.list_lock:  # 使用锁保护列表操作
+            self.audio_json_list.clear()  # 清空列表
         logging.info("清空音频数据队列")
 
-    def get_audio_json_queue_list(self):
-        # 获取队列中的数据，但不出队列
-        queue_data = list(self.audio_json_queue.queue)
-
-        # 查看获取的数据
-        # 创建一个包含队列数据的字典
-        json_data = {"list": []}
-        for item in queue_data:
-            json_data["list"].append(item)
-
-        # 将数据存入 JSON 格式
+    def get_audio_json_list(self):
+        # 将列表数据转换为 JSON 字符串
+        json_data = {"list": self.audio_json_list}
         json_str = json.dumps(json_data)
-
         return json_str
 
     """
@@ -152,7 +163,7 @@ class AUDIO_PLAY_CENTER:
         if self.stream:
             self.stream.stop_stream()
             self.stream.close()
-        self.audio_json_queue.queue.clear()  # 清空音频队列
+        self.audio_json_list.clear()  # 清空列表
 
     def skip_current_stream(self):
         self.pause_stream()

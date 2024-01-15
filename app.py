@@ -111,7 +111,7 @@ if __name__ == '__main__':
     @app.route('/clear', methods=['GET'])
     def clear():
         try:
-            audio_play_center.clear_audio_json_queue()
+            audio_play_center.clear_audio_json()
 
             return jsonify({"code": 200, "message": "清空队列成功！"})
         except Exception as e:
@@ -120,7 +120,7 @@ if __name__ == '__main__':
     @app.route('/get_list', methods=['GET'])
     def get_list():
         try:
-            json_str = audio_play_center.get_audio_json_queue_list()
+            json_str = audio_play_center.get_audio_json_list()
             data_json = json.loads(json_str)
 
             return jsonify({"code": 200, "message": data_json})
@@ -201,4 +201,4 @@ if __name__ == '__main__':
     url = f'http://localhost:{port}/index.html'
     webbrowser.open(url)
     logging.info(f"浏览器访问地址：{url}")
-    socketio.run(app, host='0.0.0.0', port=port, debug=True)
+    socketio.run(app, host='0.0.0.0', port=port, debug=False)

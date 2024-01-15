@@ -109,6 +109,9 @@ github：[https://github.com/Ikaros-521/audio_player/releases](https://github.co
 可以修改`app.py`和`js/index.js`中，搜索`5600`，全部改成你的新端口即可。  
 
 # 更新日志
+- 2024-01-15
+  - 修改队列为列表的形式，提高了数据可操作性
+  - 增加了线程锁保护
 
 - 2023-11-02
   - 给播放线程追加异常捕获，起码不会直接挂了
