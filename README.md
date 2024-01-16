@@ -33,7 +33,8 @@ github：[https://github.com/Ikaros-521/audio_player/releases](https://github.co
       "max": 1.3,
       "min": 0.8
   },
-  "speed": 1
+  "speed": 1,
+  "insert_index": 0
 }
       </code>
   </pre>
@@ -41,10 +42,11 @@ github：[https://github.com/Ikaros-521/audio_player/releases](https://github.co
   <ul>
       <li><strong>voice_path：</strong> 音频文件路径</li>
       <li><strong>content：</strong> 音频文本内容</li>
-      <li><strong>random_speed enable：</strong> 启用随机播放功能</li>
-      <li><strong>random_speed max：</strong> 随机播放的最大速度</li>
-      <li><strong>random_speed min：</strong> 随机播放的最小速度</li>
-      <li><strong>speed：</strong> 播放速度</li>
+      <li><strong>random_speed enable：</strong> 启用随机播放功能（非必填，不填默认读取本地配置）</li>
+      <li><strong>random_speed max：</strong> 随机播放的最大速度（非必填，不填默认读取本地配置）</li>
+      <li><strong>random_speed min：</strong> 随机播放的最小速度（非必填，不填默认读取本地配置）</li>
+      <li><strong>speed：</strong> 播放速度（非必填，不填默认读取本地配置）</li>
+      <li><strong>insert_index：</strong> 数据插入列表的索引值（非必填，不填默认末尾插入）</li>
   </ul>
   <p>返回数据：</p>
   <pre class="code-block">
@@ -123,7 +125,8 @@ github：[https://github.com/Ikaros-521/audio_player/releases](https://github.co
 - 2024-01-16
   - 支持传入随机速度等参数来控制输出音频效果
   - 新增实时刷新的当前播放列表显示框
-  
+  - 添加音频新增 插入索引字段，可以自定义插入的位置，用于让音频可以插队(默认非文案的音频自动插到文案前面)
+
 - 2024-01-15
   - 修改列表为列表的形式，提高了数据可操作性
   - 增加了线程锁保护

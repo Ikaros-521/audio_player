@@ -376,5 +376,5 @@ function get_list() {
 get_config();
 get_list();
 
-// 每10000毫秒调用一次get_list
-setInterval(get_list, 10000);
+// 每5000毫秒调用一次get_list
+setInterval(get_list, 5000);
