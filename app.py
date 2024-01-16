@@ -17,6 +17,7 @@ common = Common()
 log_file = "./log/log-" + common.get_bj_time(1) + ".txt"
 Configure_logger(log_file)
 
+# 配置文件路径
 config_file_path = "config.json"
 
 audio_play_center = None
@@ -113,9 +114,9 @@ if __name__ == '__main__':
         try:
             audio_play_center.clear_audio_json()
 
-            return jsonify({"code": 200, "message": "清空队列成功！"})
+            return jsonify({"code": 200, "message": "清空列表成功！"})
         except Exception as e:
-            return jsonify({"code": -1, "message": f"清空队列失败！{e}"})
+            return jsonify({"code": -1, "message": f"清空列表失败！{e}"})
 
     @app.route('/get_list', methods=['GET'])
     def get_list():
@@ -125,7 +126,7 @@ if __name__ == '__main__':
 
             return jsonify({"code": 200, "message": data_json})
         except Exception as e:
-            return jsonify({"code": -1, "message": f"清空队列失败！{e}"})
+            return jsonify({"code": -1, "message": f"清空列表失败！{e}"})
 
     
     @app.route('/run', methods=['POST'])
@@ -194,8 +195,6 @@ if __name__ == '__main__':
             return jsonify({"code": 200, "message": "跳过当前播放文件成功！"})
         except Exception as e:
             return jsonify({"code": -1, "message": f"跳过当前播放文件失败！{e}"})
-
-
 
     port = 5600
     url = f'http://localhost:{port}/index.html'

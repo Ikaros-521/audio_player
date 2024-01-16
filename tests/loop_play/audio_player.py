@@ -101,7 +101,7 @@ class AUDIO_PLAYER:
 
     def get_list(self):
         """
-        获取音频播放队列列表
+        获取音频播放列表列表
         """
         try:
             url = f"{self.api_ip_port}/get_list"
@@ -123,7 +123,7 @@ class AUDIO_PLAYER:
 
     def clear(self):
         """
-        清空播放队列
+        清空播放列表
         """
         try:
             url = f"{self.api_ip_port}/clear"

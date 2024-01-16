@@ -32,7 +32,7 @@ class AUDIO_PLAY_CENTER:
         self.pause_event = threading.Event()  # 用于暂停音频播放
         self.audio_data_event = threading.Event()  # 用于在有新数据时通知线程
 
-        self.audio_json_list = []  # 使用列表替换原先的队列
+        self.audio_json_list = []  # 使用列表替换原先的列表
 
         self.list_lock = threading.Lock()  # 列表操作的锁
         
@@ -70,12 +70,28 @@ class AUDIO_PLAY_CENTER:
                     data = wf.readframes(frame_count)
                     return (data, pyaudio.paContinue)
 
-                # 是否启用了随机播放功能
-                if self.config_data["random_speed"]["enable"]:
-                    random_speed = random.uniform(self.config_data["random_speed"]["min"], self.config_data["random_speed"]["max"])
-                    new_rate = int(wf.getframerate() * random_speed)
+                # 调节音量，示例：提高或降低 6 分贝(没有效果)
+                # if "volume_change" in data_json:
+                #     volume_change = data_json["volume_change"]
+                #     audio += volume_change  # 调整音量
+
+                # 请求传参是否包含了相关参数，包含则优先使用传参的参数
+                if "random_speed" in data_json:
+                    # 是否启用了随机播放功能
+                    if data_json["random_speed"]["enable"]:
+                        random_speed = random.uniform(data_json["random_speed"]["min"], data_json["random_speed"]["max"])
+                        new_rate = int(wf.getframerate() * random_speed)
+                    else:
+                        new_rate = int(wf.getframerate() * data_json["speed"])
+                elif "speed" in data_json:
+                    new_rate = int(wf.getframerate() * data_json["speed"])
                 else:
-                    new_rate = int(wf.getframerate() * self.config_data["speed"])
+                    # 是否启用了随机播放功能
+                    if self.config_data["random_speed"]["enable"]:
+                        random_speed = random.uniform(self.config_data["random_speed"]["min"], self.config_data["random_speed"]["max"])
+                        new_rate = int(wf.getframerate() * random_speed)
+                    else:
+                        new_rate = int(wf.getframerate() * self.config_data["speed"])
 
                 self.stream = self.audio.open(format=self.audio.get_format_from_width(wf.getsampwidth()),
                                     channels=wf.getnchannels(),
@@ -143,7 +159,7 @@ class AUDIO_PLAY_CENTER:
     def clear_audio_json(self):
         with self.list_lock:  # 使用锁保护列表操作
             self.audio_json_list.clear()  # 清空列表
-        logging.info("清空音频数据队列")
+        logging.info("清空音频数据列表")
 
     def get_audio_json_list(self):
         # 将列表数据转换为 JSON 字符串

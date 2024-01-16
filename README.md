@@ -13,12 +13,13 @@ python：3.10
 ## 整合包
 
 github：[https://github.com/Ikaros-521/audio_player/releases](https://github.com/Ikaros-521/audio_player/releases)  
-夸克：[https://pan.quark.cn/s/a0cf8d59d9ad](https://pan.quark.cn/s/a0cf8d59d9ad)  
+迅雷云盘： [https://pan.xunlei.com/s/VNitDF0Y3l-qwTpE0A5Rh4DaA1](https://pan.xunlei.com/s/VNitDF0Y3l-qwTpE0A5Rh4DaA1)  
+夸克网盘： [https://pan.quark.cn/s/936dcae8aba0](https://pan.quark.cn/s/936dcae8aba0)  
  
 ## API
 
 <section>
-  <h3>添加音频数据到播放队列</h3>
+  <h3>添加音频数据到播放列表</h3>
   <p>使用 POST 请求到以下 URL：</p>
   <code>http://127.0.0.1:5600/play</code>
   <p>请求体（json字符串）：</p>
@@ -26,7 +27,13 @@ github：[https://github.com/Ikaros-521/audio_player/releases](https://github.co
       <code>
 {
   "voice_path": "out\\2.mp3",
-  "content": "音频文本内容"
+  "content": "音频文本内容",
+  "random_speed": {
+      "enable": false,
+      "max": 1.3,
+      "min": 0.8
+  },
+  "speed": 1
 }
       </code>
   </pre>
@@ -34,6 +41,10 @@ github：[https://github.com/Ikaros-521/audio_player/releases](https://github.co
   <ul>
       <li><strong>voice_path：</strong> 音频文件路径</li>
       <li><strong>content：</strong> 音频文本内容</li>
+      <li><strong>random_speed enable：</strong> 启用随机播放功能</li>
+      <li><strong>random_speed max：</strong> 随机播放的最大速度</li>
+      <li><strong>random_speed min：</strong> 随机播放的最小速度</li>
+      <li><strong>speed：</strong> 播放速度</li>
   </ul>
   <p>返回数据：</p>
   <pre class="code-block">
@@ -66,12 +77,12 @@ github：[https://github.com/Ikaros-521/audio_player/releases](https://github.co
   <code>http://127.0.0.1:5600/skip_current_stream</code>
 </section>
 <section>
-  <h3>清空播放队列</h3>
+  <h3>清空播放列表</h3>
   <p>使用 GET 请求到以下 URL：</p>
   <code>http://127.0.0.1:5600/clear</code>
 </section>
 <section>
-  <h3>获取播放队列</h3>
+  <h3>获取播放列表</h3>
   <p>使用 GET 请求到以下 URL：</p>
   <code>http://127.0.0.1:5600/get_list</code>
 </section>
@@ -109,8 +120,12 @@ github：[https://github.com/Ikaros-521/audio_player/releases](https://github.co
 可以修改`app.py`和`js/index.js`中，搜索`5600`，全部改成你的新端口即可。  
 
 # 更新日志
+- 2024-01-16
+  - 支持传入随机速度等参数来控制输出音频效果
+  - 新增实时刷新的当前播放列表显示框
+  
 - 2024-01-15
-  - 修改队列为列表的形式，提高了数据可操作性
+  - 修改列表为列表的形式，提高了数据可操作性
   - 增加了线程锁保护
   - 修改暂停、恢复播放功能实现，实现真正意义上的暂停和暂停点恢复播放。
 
@@ -120,7 +135,7 @@ github：[https://github.com/Ikaros-521/audio_player/releases](https://github.co
   - 美化UI
 
 - 2023-11-01
-  - 新增跳过当前播放、清空播放队列和获取播放队列功能
+  - 新增跳过当前播放、清空播放列表和获取播放列表功能
   - 优化文档
 
 - 2023-10-31

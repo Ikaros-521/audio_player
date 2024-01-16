@@ -34,7 +34,7 @@
         <label for="textarea_audio_json">播放音频数据：</label>
         <br>
         <textarea class="textarea_config_common" id="textarea_audio_json" name="textarea_audio_json" rows="4"
-            cols="50">{"voice_path": "out\\2.mp3", "content": "out\\2.mp3"}</textarea>
+            cols="50">{"voice_path": "out\\2.mp3", "content": "out\\2.mp3",  "random_speed": {"enable": false, "max": 1.3, "min": 0.8}, "speed": 1}</textarea>
         <button id="play_button" onclick="play()" style="position: relative; bottom: 20px;">📤发送数据</button>
     </div>
     <div>
@@ -52,12 +52,18 @@
         <button id="pause_stream_button" onclick="pause_stream(1)">⏸︎暂停播放</button>
         <button id="resume_stream_button" onclick="pause_stream(0)">▶️恢复播放</button>
         <button id="skip_current_stream_button" onclick="skip_current_stream()">⏭跳过当前播放</button>
-        <button id="clear_list_button" onclick="clear_list()">🗑清空播放队列</button>
+        <button id="clear_list_button" onclick="clear_list()">🗑清空播放列表</button>
+    </div>
+    <div style="margin: 10px 0px; position: fixed; top: 1%; right: 1%;">
+        <h2>播放列表</h2>
+        <textarea id="textarea_audio_list" rows="20" cols="50"></textarea>
+        <br>
+        <button id="get_list_button" onclick="get_list()">刷新播放列表</button>
     </div>
     <div>
         <h2>API</h2>
         <section>
-            <h3>添加音频数据到播放队列</h3>
+            <h3>添加音频数据到播放列表</h3>
             <p>使用 POST 请求到以下 URL：</p>
             <code>http://127.0.0.1:5600/play</code>
             <p>请求体（json字符串）：</p>
@@ -65,7 +71,13 @@
                 <code>
 {
     "voice_path": "out\\2.mp3",
-    "content": "音频文本内容"
+    "content": "音频文本内容",
+    "random_speed": {
+        "enable": false,
+        "max": 1.3,
+        "min": 0.8
+    },
+    "speed": 1
 }
                 </code>
             </pre>
@@ -73,6 +85,10 @@
             <ul>
                 <li><strong>voice_path：</strong> 音频文件路径</li>
                 <li><strong>content：</strong> 音频文本内容</li>
+                <li><strong>random_speed enable：</strong> 启用随机播放功能</li>
+                <li><strong>random_speed max：</strong> 随机播放的最大速度</li>
+                <li><strong>random_speed min：</strong> 随机播放的最小速度</li>
+                <li><strong>speed：</strong> 播放速度</li>
             </ul>
             <p>返回数据：</p>
             <pre class="code-block">
@@ -104,12 +120,12 @@
             <a href="http://127.0.0.1:5600/skip_current_stream" target="_blank">http://127.0.0.1:5600/skip_current_stream</a>
         </section>
         <section>
-            <h3>清空播放队列</h3>
+            <h3>清空播放列表</h3>
             <p>使用 GET 请求到以下 URL：</p>
             <a href="http://127.0.0.1:5600/clear" target="_blank">http://127.0.0.1:5600/clear</a>
         </section>
         <section>
-            <h3>获取播放队列</h3>
+            <h3>获取播放列表</h3>
             <p>使用 GET 请求到以下 URL：</p>
             <a href="http://127.0.0.1:5600/get_list" target="_blank">http://127.0.0.1:5600/get_list</a>
         </section>

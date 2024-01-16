@@ -311,6 +311,7 @@ function skip_current_stream() {
             console.log(data);
             
             showtip("info", "跳过当前播放成功");
+            get_list();
         })
         .catch(function (error) {
             // 处理错误
@@ -333,7 +334,8 @@ function clear_list() {
         .then(function (data) {
             // 处理响应数据
             console.log(data);
-            showtip("info", "清空播放队列成功");
+            showtip("info", "清空播放列表成功");
+            get_list();
         })
         .catch(function (error) {
             // 处理错误
@@ -342,6 +344,7 @@ function clear_list() {
         });
 }
 
+// 获取当前播放列表
 function get_list() {
     var url = `http://127.0.0.1:${server_port}/get_list`;
 
@@ -356,7 +359,12 @@ function get_list() {
         .then(function (data) {
             // 处理响应数据
             console.log(data);
-            showtip("info", "获取播放队列列表成功");
+            // 解析 JSON 字符串
+            let jsonObj = JSON.parse(data);
+            // 重新格式化 JSON 字符串，缩进使用 4 个空格
+            let formattedData = JSON.stringify(jsonObj, null, 4);
+            document.getElementById('textarea_audio_list').value = formattedData;
+            // showtip("info", "获取播放列表列表成功");
         })
         .catch(function (error) {
             // 处理错误
@@ -366,4 +374,7 @@ function get_list() {
 }
 
 get_config();
+get_list();
 
+// 每10000毫秒调用一次get_list
+setInterval(get_list, 10000);
