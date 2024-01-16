@@ -60,9 +60,13 @@ function get_config() {
             config = data_json;
 
             document.getElementById('input_speed').value = config["speed"];
+            document.getElementById('input_audio_interval').value = config["audio_interval"];
             document.getElementById('input_random_speed_enable').checked = config["random_speed"]["enable"];
             document.getElementById('input_random_speed_min').value = config["random_speed"]["min"];
             document.getElementById('input_random_speed_max').value = config["random_speed"]["max"];
+            document.getElementById('input_random_audio_interval_enable').checked = config["random_audio_interval"]["enable"];
+            document.getElementById('input_random_audio_interval_min').value = config["random_audio_interval"]["min"];
+            document.getElementById('input_random_audio_interval_max').value = config["random_audio_interval"]["max"];
             document.getElementById('input_captions_printer_enable').checked = config["captions_printer"]["enable"];
             document.getElementById('input_captions_printer_api_ip_port').value = config["captions_printer"]["api_ip_port"];
 
@@ -138,9 +142,13 @@ function save_config() {
     try {
         config["device_index"] = parseInt(document.getElementById('select_device').value);
         config["speed"] = parseFloat(document.getElementById('input_speed').value);
+        config["audio_interval"] = parseFloat(document.getElementById('input_audio_interval').value);
         config["random_speed"]["enable"] = document.getElementById("input_random_speed_enable").checked;
         config["random_speed"]["min"] = parseFloat(document.getElementById('input_random_speed_min').value);
         config["random_speed"]["max"] = parseFloat(document.getElementById('input_random_speed_max').value);
+        config["random_audio_interval"]["enable"] = document.getElementById("input_random_audio_interval_enable").checked;
+        config["random_audio_interval"]["min"] = parseFloat(document.getElementById('input_random_audio_interval_min').value);
+        config["random_audio_interval"]["max"] = parseFloat(document.getElementById('input_random_audio_interval_max').value);
         config["captions_printer"]["enable"] = document.getElementById('input_captions_printer_enable').checked;
         config["captions_printer"]["api_ip_port"] = document.getElementById('input_captions_printer_api_ip_port').value;
 
@@ -188,9 +196,13 @@ function save_config() {
 function run() {
     config["device_index"] = parseInt(document.getElementById('select_device').value);
     config["speed"] = parseFloat(document.getElementById('input_speed').value);
+    config["audio_interval"] = parseFloat(document.getElementById('input_audio_interval').value);
     config["random_speed"]["enable"] = document.getElementById("input_random_speed_enable").checked;
     config["random_speed"]["min"] = parseFloat(document.getElementById('input_random_speed_min').value);
     config["random_speed"]["max"] = parseFloat(document.getElementById('input_random_speed_max').value);
+    config["random_audio_interval"]["enable"] = document.getElementById("input_random_audio_interval_enable").checked;
+    config["random_audio_interval"]["min"] = parseFloat(document.getElementById('input_random_audio_interval_min').value);
+    config["random_audio_interval"]["max"] = parseFloat(document.getElementById('input_random_audio_interval_max').value);
 
     // 构建请求选项对象
     const requestOptions = {

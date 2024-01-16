@@ -96,12 +96,22 @@ github：[https://github.com/Ikaros-521/audio_player/releases](https://github.co
       <code>
 {
   "device_index": 5,
+  "captions_printer": {
+    "api_ip_port": "http://127.0.0.1:5500",
+    "enable": false
+  },
   "random_speed": {
     "enable": false,
     "max": 1.3,
     "min": 0.8
   },
-  "speed": 1
+  "speed": 1,
+  "random_audio_interval": {
+    "enable": false,
+    "max": 3,
+    "min": 0.1
+  },
+  "audio_interval": 0.5
 }
       </code>
   </pre>
@@ -114,6 +124,10 @@ github：[https://github.com/Ikaros-521/audio_player/releases](https://github.co
       <li><strong>speed：</strong> 播放速度</li>
       <li><strong>captions_printer enable：</strong> 启用对接web字幕打印机</li>
       <li><strong>captions_printer api_ip_port：</strong> web字幕打印机服务的API地址</li>
+      <li><strong>random_audio_interval enable：</strong> 启用随机音频间隔功能</li>
+      <li><strong>random_audio_interval max：</strong> 随机音频播放的最大间隔</li>
+      <li><strong>random_audio_interval min：</strong> 随机音频播放的最小间隔</li>
+      <li><strong>audio_interval：</strong> 音频播放间隔</li>
   </ul>
 </section>
 
@@ -126,6 +140,7 @@ github：[https://github.com/Ikaros-521/audio_player/releases](https://github.co
   - 支持传入随机速度等参数来控制输出音频效果
   - 新增实时刷新的当前播放列表显示框
   - 添加音频新增 插入索引字段，可以自定义插入的位置，用于让音频可以插队(默认非文案的音频自动插到文案前面)
+  - 新增配置项 随机音频间隔和音频间隔，用于控制音频播放的间隔，让机器嘴歇会
 
 - 2024-01-15
   - 修改列表为列表的形式，提高了数据可操作性

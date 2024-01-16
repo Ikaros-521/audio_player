@@ -1,9 +1,15 @@
 {
+  "audio_interval": 0.5,
   "captions_printer": {
     "api_ip_port": "http://127.0.0.1:5500",
     "enable": false
   },
   "device_index": 5,
+  "random_audio_interval": {
+    "enable": false,
+    "max": 3,
+    "min": 0.1
+  },
   "random_speed": {
     "enable": false,
     "max": 1.3,

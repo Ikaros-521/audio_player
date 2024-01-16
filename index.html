@@ -19,16 +19,28 @@
     <div>
         <label for="input_speed">播放速度:</label>
         <input class="input_config_common" type="text" id="input_speed" placeholder="请输入播放速度比例，例如原速度为：1">
+        <label for="input_audio_interval">音频间隔:</label>
+        <input class="input_config_common" type="text" id="input_audio_interval" placeholder="请输入随机音频间隔的最小值（秒），例如：0.5">
     </div>
     <div>
         <label>启用随机播放:</label>
         <input id="input_random_speed_enable" type="checkbox" value="1" />
-        <label for="input_random_speed_min">速度下限:</label>
+        <label for="input_random_speed_min">速度下限（比例）:</label>
         <input class="input_config_common" type="text" id="input_random_speed_min"
             placeholder="请输入随机播放速度比例的最小值，例如减速为：0.8">
-        <label for="input_random_speed_max">速度上限:</label>
+        <label for="input_random_speed_max">速度上限（比例）:</label>
         <input class="input_config_common" type="text" id="input_random_speed_max"
             placeholder="请输入随机播放速度比例的最大值，例如加速为：1.3">
+    </div>
+    <div>
+        <label>启用随机音频间隔:</label>
+        <input id="input_random_audio_interval_enable" type="checkbox" value="1" />
+        <label for="input_random_audio_interval_min">音频间隔下限（秒）:</label>
+        <input class="input_config_common" type="text" id="input_random_audio_interval_min"
+            placeholder="请输入随机音频间隔的最小值（秒），例如最小间隔为：0.1">
+        <label for="input_random_audio_interval_max">音频间隔上限（秒）:</label>
+        <input class="input_config_common" type="text" id="input_random_audio_interval_max"
+            placeholder="请输入随机音频间隔的最大值（秒），例如最大间隔为：3">
     </div>
     <div>
         <label for="textarea_audio_json">播放音频数据：</label>

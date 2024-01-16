@@ -113,6 +113,12 @@ class AUDIO_PLAY_CENTER:
                 # self.stream.stop_stream()
                 # self.stream.close()
                 # wf.close()
+
+                # 启用随机音频间隔功能
+                if self.config_data["random_audio_interval"]["enable"]:
+                    time.sleep(random.uniform(self.config_data["random_audio_interval"]["min"], self.config_data["random_audio_interval"]["max"]))
+                else:
+                    time.sleep(self.config_data["audio_interval"])
             except AttributeError as e:
                 # 处理异常
                 logging.error(traceback.format_exc())
