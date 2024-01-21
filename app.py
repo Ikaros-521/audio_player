@@ -5,6 +5,7 @@ from flask_socketio import SocketIO, emit
 from flask_cors import CORS
 import asyncio
 import os, sys
+import traceback
 
 from utils.common import Common
 from utils.logger import Configure_logger
@@ -86,6 +87,7 @@ if __name__ == '__main__':
 
             return jsonify(data)
         except Exception as e:
+            logging.error(traceback.format_exc())
             return jsonify({"code": -1, "message": f"获取本地配置失败{e}"})
         
     @app.route('/save_config', methods=['POST'])
@@ -102,6 +104,7 @@ if __name__ == '__main__':
                 logging.info("配置数据已成功写入文件！")
                 return jsonify({"code": 200, "message": "配置数据已成功写入文件！"})
             except Exception as e:
+                logging.error(traceback.format_exc())
                 logging.error(f"无法写入配置文件！{e}")
                 return jsonify({"code": -1, "message": "无法写入配置文件！{e}"})
 
@@ -116,6 +119,7 @@ if __name__ == '__main__':
 
             return jsonify({"code": 200, "message": "清空列表成功！"})
         except Exception as e:
+            logging.error(traceback.format_exc())
             return jsonify({"code": -1, "message": f"清空列表失败！{e}"})
 
     @app.route('/get_list', methods=['GET'])
@@ -126,6 +130,7 @@ if __name__ == '__main__':
 
             return jsonify({"code": 200, "message": data_json})
         except Exception as e:
+            logging.error(traceback.format_exc())
             return jsonify({"code": -1, "message": f"清空列表失败！{e}"})
 
     
@@ -143,6 +148,7 @@ if __name__ == '__main__':
                 logging.info("配置数据已成功写入文件！")
                 return jsonify({"code": 200, "message": "配置数据已成功写入文件！"})
             except Exception as e:
+                logging.error(traceback.format_exc())
                 logging.error(f"无法写入配置文件！{e}")
                 return jsonify({"code": -1, "message": "无法写入配置文件！{e}"})
 
@@ -163,6 +169,7 @@ if __name__ == '__main__':
                 logging.info("添加音频信息成功！")
                 return jsonify({"code": 200, "message": "添加音频信息成功！"})
             except Exception as e:
+                logging.error(traceback.format_exc())
                 logging.error(f"添加音频信息失败！{e}")
                 return jsonify({"code": -1, "message": f"添加音频信息失败！{e}"})
 
@@ -176,6 +183,7 @@ if __name__ == '__main__':
 
             return jsonify({"code": 200, "message": "暂停成功！"})
         except Exception as e:
+            logging.error(traceback.format_exc())
             return jsonify({"code": -1, "message": f"暂停失败！{e}"})
         
     @app.route('/resume_stream', methods=['GET'])
@@ -185,6 +193,7 @@ if __name__ == '__main__':
 
             return jsonify({"code": 200, "message": "恢复成功！"})
         except Exception as e:
+            logging.error(traceback.format_exc())
             return jsonify({"code": -1, "message": f"恢复失败！{e}"})
 
     @app.route('/skip_current_stream', methods=['GET'])
@@ -194,6 +203,7 @@ if __name__ == '__main__':
 
             return jsonify({"code": 200, "message": "跳过当前播放文件成功！"})
         except Exception as e:
+            logging.error(traceback.format_exc())
             return jsonify({"code": -1, "message": f"跳过当前播放文件失败！{e}"})
 
     port = 5600

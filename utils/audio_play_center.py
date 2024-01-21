@@ -165,14 +165,18 @@ class AUDIO_PLAY_CENTER:
                 else:
                     self.audio_json_list.insert(audio_json["insert_index"], audio_json)
             else:
-                # 找到最后一个 type 不是 'copywriting' 的索引，如果所有 type 都是 'copywriting'，则返回 0
-                last_non_copywriting_index = next((i for i in range(len(self.audio_json_list) - 1, -1, -1) if self.audio_json_list[i]["type"] != "copywriting"), -1)
+                # 数据是否有type键值
+                if "type" in audio_json:
+                    # 找到最后一个 type 不是 'copywriting' 的索引，如果所有 type 都是 'copywriting'，则返回 0
+                    last_non_copywriting_index = next((i for i in range(len(self.audio_json_list) - 1, -1, -1) if self.audio_json_list[i]["type"] != "copywriting"), -1)
 
-                # 根据找到的索引决定插入位置
-                insert_position = 0 if last_non_copywriting_index == -1 else last_non_copywriting_index + 1
+                    # 根据找到的索引决定插入位置
+                    insert_position = 0 if last_non_copywriting_index == -1 else last_non_copywriting_index + 1
 
-                # 在计算出的位置插入新数据
-                self.audio_json_list.insert(insert_position, audio_json)
+                    # 在计算出的位置插入新数据
+                    self.audio_json_list.insert(insert_position, audio_json)
+                else:
+                    self.audio_json_list.append(audio_json)  # 将音频数据添加到列表末尾
         self.audio_data_event.set()  # 有新数据，设置事件
         logging.info(f"添加音频数据={audio_json}")
 
