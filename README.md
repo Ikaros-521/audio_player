@@ -136,6 +136,9 @@ github：[https://github.com/Ikaros-521/audio_player/releases](https://github.co
 可以修改`app.py`和`js/index.js`中，搜索`5600`，全部改成你的新端口即可。  
 
 # 更新日志
+- 2024-02-18
+  - 更换协议为GPL3.0
+
 - 2024-01-21
   - 修复传参不携带type键时的插入异常bug
   
