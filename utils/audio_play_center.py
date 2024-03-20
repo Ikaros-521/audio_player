@@ -156,8 +156,63 @@ class AUDIO_PLAY_CENTER:
     """
     数据相关
     """
+
+    # 数据根据优先级排队插入
+    def data_priority_insert(self, audio_json):
+        """
+        type目前有
+            comment 弹幕
+            local_qa_audio 本地问答音频
+            song 歌曲
+            reread 复读
+            direct_reply 直接回复
+            read_comment 念弹幕
+            gift 礼物
+            entrance 用户入场
+            follow 用户关注
+            idle_time_task 闲时任务
+            abnormal_alarm 异常报警
+            image_recognition_schedule 图像识别定时任务
+            trends_copywriting 动态文案
+        """
+        logging.debug(f"audio_json: {audio_json}")
+
+        # 定义 type 到优先级的映射，相同优先级的 type 映射到相同的值，值越大优先级越高
+        priority_mapping = self.config_data["priority_mapping"]
+        
+        def get_priority_level(audio_json):
+            """根据 audio_json 的 'type' 键返回优先级，未定义的 type 或缺失 'type' 键将返回 None"""
+            # 检查 audio_json 是否包含 'type' 键且该键的值在 priority_mapping 中
+            audio_type = audio_json.get("type")
+            return priority_mapping.get(audio_type, None)
+
+        # 查找插入位置
+        new_data_priority = get_priority_level(audio_json)
+
+        logging.info(f"new_data_priority: {new_data_priority}")
+        
+        # 如果新数据没有 'type' 键或其类型不在 priority_mapping 中，直接插入到末尾
+        if new_data_priority is None:
+            insert_position = len(self.audio_json_list)
+        else:
+            insert_position = 0  # 默认插入到列表开头
+            # 从列表的最后一个元素开始，向前遍历列表，直到第一个元素
+            for i in range(len(self.audio_json_list) - 1, -1, -1):
+                item_priority = get_priority_level(self.audio_json_list[i])
+                # 确保比较时排除未定义类型的元素
+                if item_priority is not None and item_priority >= new_data_priority:
+                    # 如果找到一个元素，其优先级小于或等于新数据，则将新数据插入到此元素之后
+                    insert_position = i + 1
+                    break
+
+        # 在计算出的位置插入新数据
+        self.audio_json_list.insert(insert_position, audio_json)
+
+
     def add_audio_json(self, audio_json):
         with self.list_lock:  # 使用锁保护列表操作
+            logging.info(f"audio_json: {audio_json}")
+
             # 是否传入了指定的插入索引
             if "insert_index" in audio_json:
                 if audio_json["insert_index"] == -1:
@@ -165,18 +220,7 @@ class AUDIO_PLAY_CENTER:
                 else:
                     self.audio_json_list.insert(audio_json["insert_index"], audio_json)
             else:
-                # 数据是否有type键值
-                if "type" in audio_json:
-                    # 找到最后一个 type 不是 'copywriting' 的索引，如果所有 type 都是 'copywriting'，则返回 0
-                    last_non_copywriting_index = next((i for i in range(len(self.audio_json_list) - 1, -1, -1) if self.audio_json_list[i]["type"] != "copywriting"), -1)
-
-                    # 根据找到的索引决定插入位置
-                    insert_position = 0 if last_non_copywriting_index == -1 else last_non_copywriting_index + 1
-
-                    # 在计算出的位置插入新数据
-                    self.audio_json_list.insert(insert_position, audio_json)
-                else:
-                    self.audio_json_list.append(audio_json)  # 将音频数据添加到列表末尾
+                self.data_priority_insert(audio_json)
         self.audio_data_event.set()  # 有新数据，设置事件
         logging.info(f"添加音频数据={audio_json}")
 

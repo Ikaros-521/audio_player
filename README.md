@@ -111,7 +111,22 @@ github：[https://github.com/Ikaros-521/audio_player/releases](https://github.co
     "max": 3,
     "min": 0.1
   },
-  "audio_interval": 0.5
+  "audio_interval": 0.5,
+  "priority_mapping": {
+    "copywriting": 1, 
+    "abnormal_alarm": 1, 
+    "trends_copywriting": 10, 
+    "idle_time_task": 10,
+    "image_recognition_schedule": 10,
+    "local_qa_audio": 20,
+    "comment": 20,
+    "song": 20,
+    "read_comment": 20,
+    "gift": 20,
+    "follow": 20,
+    "reread": 30,
+    "direct_reply": 30
+  }
 }
       </code>
   </pre>
@@ -128,6 +143,7 @@ github：[https://github.com/Ikaros-521/audio_player/releases](https://github.co
       <li><strong>random_audio_interval max：</strong> 随机音频播放的最大间隔</li>
       <li><strong>random_audio_interval min：</strong> 随机音频播放的最小间隔</li>
       <li><strong>audio_interval：</strong> 音频播放间隔</li>
+      <li><strong>priority_mapping：</strong> 音频数据优先级（type键值，值越大优先级越高）</li>
   </ul>
 </section>
 
@@ -136,6 +152,9 @@ github：[https://github.com/Ikaros-521/audio_player/releases](https://github.co
 可以修改`app.py`和`js/index.js`中，搜索`5600`，全部改成你的新端口即可。  
 
 # 更新日志
+- 2024-03-20
+  - 配置文件新增优先级配置项，针对各个音频数据类型，可以自定义优先级进行排队，用于实现弹幕优先于文案的这种效果。
+
 - 2024-02-18
   - 更换协议为GPL3.0
 
