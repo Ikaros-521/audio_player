@@ -20,6 +20,7 @@
     "copywriting": 1, 
     "abnormal_alarm": 1, 
     "trends_copywriting": 10, 
+    "schedule": 10,
     "idle_time_task": 10,
     "image_recognition_schedule": 10,
     "local_qa_audio": 20,
@@ -29,6 +30,7 @@
     "gift": 20,
     "follow": 20,
     "reread": 30,
-    "direct_reply": 30
+    "direct_reply": 30,
+    "reread_top_priority": 999
   }
 }

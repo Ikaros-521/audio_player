@@ -161,6 +161,7 @@ class AUDIO_PLAY_CENTER:
     def data_priority_insert(self, audio_json):
         """
         type目前有
+            reread_top_priority 最高优先级-复读
             comment 弹幕
             local_qa_audio 本地问答音频
             song 歌曲
@@ -170,6 +171,7 @@ class AUDIO_PLAY_CENTER:
             gift 礼物
             entrance 用户入场
             follow 用户关注
+            schedule 定时任务
             idle_time_task 闲时任务
             abnormal_alarm 异常报警
             image_recognition_schedule 图像识别定时任务
