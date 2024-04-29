@@ -126,6 +126,11 @@ github：[https://github.com/Ikaros-521/audio_player/releases](https://github.co
     "follow": 20,
     "reread": 30,
     "direct_reply": 30
+  },
+  "ai_vtuber": {
+    "api_ip": "127.0.0.1",
+    "api_port": 8082,
+    "callback_enable": false
   }
 }
       </code>
@@ -144,6 +149,9 @@ github：[https://github.com/Ikaros-521/audio_player/releases](https://github.co
       <li><strong>random_audio_interval min：</strong> 随机音频播放的最小间隔</li>
       <li><strong>audio_interval：</strong> 音频播放间隔</li>
       <li><strong>priority_mapping：</strong> 音频数据优先级（type键值，值越大优先级越高）</li>
+      <li><strong>ai_vtuber enable：</strong> 启用ai_vtuber回传功能</li>
+      <li><strong>ai_vtuber api_ip：</strong> ai_vtuber内部http服务ip</li>
+      <li><strong>ai_vtuber api_port：</strong> ai_vtuber内部http服务端口</li>
   </ul>
 </section>
 
@@ -152,6 +160,9 @@ github：[https://github.com/Ikaros-521/audio_player/releases](https://github.co
 可以修改`app.py`和`js/index.js`中，搜索`5600`，全部改成你的新端口即可。  
 
 # 更新日志
+- 2024-04-29
+  - 新增 AI Vtuber回传功能，配合闲时任务的待播放音频数 功能
+
 - 2024-03-20
   - 配置文件新增优先级配置项，针对各个音频数据类型，可以自定义优先级进行排队，用于实现弹幕优先于文案的这种效果。
 
