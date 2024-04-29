@@ -67,8 +67,13 @@ function get_config() {
             document.getElementById('input_random_audio_interval_enable').checked = config["random_audio_interval"]["enable"];
             document.getElementById('input_random_audio_interval_min').value = config["random_audio_interval"]["min"];
             document.getElementById('input_random_audio_interval_max').value = config["random_audio_interval"]["max"];
+
             document.getElementById('input_captions_printer_enable').checked = config["captions_printer"]["enable"];
             document.getElementById('input_captions_printer_api_ip_port').value = config["captions_printer"]["api_ip_port"];
+            
+            document.getElementById('input_ai_vtuber_callback_enable').checked = config["ai_vtuber"]["callback_enable"];
+            document.getElementById('input_ai_vtuber_api_ip').value = config["ai_vtuber"]["api_ip"];
+            document.getElementById('input_ai_vtuber_api_port').value = config["ai_vtuber"]["api_port"];
 
             // 获取声卡设备列表
             get_deivce();
@@ -149,8 +154,13 @@ function save_config() {
         config["random_audio_interval"]["enable"] = document.getElementById("input_random_audio_interval_enable").checked;
         config["random_audio_interval"]["min"] = parseFloat(document.getElementById('input_random_audio_interval_min').value);
         config["random_audio_interval"]["max"] = parseFloat(document.getElementById('input_random_audio_interval_max').value);
+
         config["captions_printer"]["enable"] = document.getElementById('input_captions_printer_enable').checked;
         config["captions_printer"]["api_ip_port"] = document.getElementById('input_captions_printer_api_ip_port').value;
+
+        config["ai_vtuber"]["callback_enable"] = document.getElementById('input_ai_vtuber_callback_enable').checked;
+        config["ai_vtuber"]["api_ip"] = document.getElementById('input_ai_vtuber_api_ip').value;
+        config["ai_vtuber"]["api_port"] = parseInt(document.getElementById('input_ai_vtuber_api_port').value);
 
     } catch (error) {
         console.error(error);

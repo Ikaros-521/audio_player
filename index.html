@@ -52,9 +52,19 @@
     <div>
         <label>启用web字幕打印机:</label>
         <input id="input_captions_printer_enable" type="checkbox" value="1" />
-        <label for="input_captions_printer_min">API地址:</label>
+        <label for="input_captions_printer_api_ip_port">API地址:</label>
         <input class="input_config_common" type="text" id="input_captions_printer_api_ip_port"
             placeholder="web字幕打印机服务的API地址" style="width: 300px;">
+    </div>
+    <div>
+        <label>启用AI Vtuber回传:</label>
+        <input id="input_ai_vtuber_callback_enable" type="checkbox" value="1" />
+        <label for="input_ai_vtuber_api_ip">API IP:</label>
+        <input class="input_config_common" type="text" id="input_ai_vtuber_api_ip"
+            placeholder="AI Vtuber的内部API IP" style="width: 200px;">
+            <label for="input_ai_vtuber_api_port">API端口:</label>
+            <input class="input_config_common" type="text" id="input_ai_vtuber_api_port"
+                placeholder="AI Vtuber的内部API 端口" style="width: 200px;">
     </div>
     <div>
         <button id="save_button" onclick="save_config()">📄保存配置</button>

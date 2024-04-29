@@ -35,7 +35,29 @@ class AUDIO_PLAY_CENTER:
         self.audio_json_list = []  # 使用列表替换原先的列表
 
         self.list_lock = threading.Lock()  # 列表操作的锁
-        
+    
+    # 发送音频播放信息给AI Vtuber的http服务端
+    def send_audio_play_info_to_callback(self, data: dict=None):
+        """发送音频播放信息给AI Vtuber的http服务端
+
+        Args:
+            data (dict): 音频播放信息
+        """
+        if data is None:
+            data = {
+                "type": "audio_playback_completed",
+                "data": {
+                    # 待播放音频数量
+                    "wait_play_audio_num": len(self.audio_json_list),
+                }
+            }
+
+        logging.debug(f"data={data}")
+
+        resp = self.common.send_request(f'http://{self.config_data["ai_vtuber"]["api_ip"]}:{self.config_data["ai_vtuber"]["api_port"]}/callback', "POST", data)
+
+        return resp
+    
 
     def play_audio(self):
         # common = Common()
@@ -113,6 +135,10 @@ class AUDIO_PLAY_CENTER:
                 # self.stream.stop_stream()
                 # self.stream.close()
                 # wf.close()
+
+                # 启用音频信息回传AI Vtuber功能
+                if self.config_data["ai_vtuber"]["callback_enable"]:
+                    self.send_audio_play_info_to_callback()
 
                 # 启用随机音频间隔功能
                 if self.config_data["random_audio_interval"]["enable"]:
