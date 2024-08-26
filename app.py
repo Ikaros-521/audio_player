@@ -33,6 +33,9 @@ if __name__ == '__main__':
         config = json.load(file)
     audio_play_center = AUDIO_PLAY_CENTER(config)
 
+    # 清空缓存音频
+    common.clear_audio_files("cache")
+
     # 创建并启动服务器线程
     # server_thread = threading.Thread(target=lambda: asyncio.run(audio_play_center.start_play_thread()))
     # server_thread.start()

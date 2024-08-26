@@ -27,6 +27,7 @@ github：[https://github.com/Ikaros-521/audio_player/releases](https://github.co
       <code>
 {
   "voice_path": "out\\2.mp3",
+  "voice_name": "2",
   "mode": "local",
   "content": "音频文本内容",
   "random_speed": {
@@ -42,6 +43,7 @@ github：[https://github.com/Ikaros-521/audio_player/releases](https://github.co
   <p>参数说明：</p>
   <ul>
       <li><strong>voice_path：</strong> 音频文件路径</li>
+      <li><strong>voice_name：</strong> 音频文件名（非必填，传入情况下优先检索本地cache路径下的音频文件是否存在，不存在则转为使用voice_path）</li>
       <li><strong>mode：</strong> 音频加载模式（local/url）非必填，不传默认为local，本地路径。url情况下，voice_path可以是在线url链接</li>
       <li><strong>content：</strong> 音频文本内容</li>
       <li><strong>random_speed enable：</strong> 启用随机播放功能（非必填，不填默认读取本地配置）</li>
@@ -166,6 +168,8 @@ github：[https://github.com/Ikaros-521/audio_player/releases](https://github.co
 
 - 2024-08-26
   - 支持 mode传参，local/url，可以通过url模式，将voice_path换成url在线路径，实现云音频播放
+  - 新增参数 voice_name 音频文件名（非必填，传入情况下优先检索本地cache路径下的音频文件是否存在，不存在则转为使用voice_path）
+  - 运行自动清空缓存文件夹cache
 
 - 2024-04-29
   - 新增 AI Vtuber回传功能，配合闲时任务的待播放音频数 功能

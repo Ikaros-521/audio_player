@@ -211,4 +211,85 @@ class Common:
         except requests.Timeout:
             logging.error(f"{type} 下载音频超时")
             return None
+
+    def search_audio_file(self, directory: str, file_name: str, audio_suffixes: list = None):
+        """
+        从指定路径下搜索音频文件，搜到就返回音频文件绝对路径，搜不到就返回None。
+
+        :param directory: 要搜索的目录
+        :param file_name: 音频文件名（不含文件拓展名）
+        :param audio_suffixes: 可能的音频文件后缀列表，如 ['wav', 'mp3', 'flac']。默认为 ['wav', 'mp3']。
+        :return: 找到的音频文件绝对路径，或者 None
+        """
+        if audio_suffixes is None:
+            audio_suffixes = ['wav', 'mp3']
+
+        try:
+            for root, _, files in os.walk(directory):
+                for suffix in audio_suffixes:
+                    target_file = f"{file_name}.{suffix}"
+                    if target_file in files:
+                        return os.path.join(root, target_file)
+            return None
+        except Exception as e:
+            logging.error(f"搜索音频文件时发生异常: {str(e)}")
+            return None  
+        
+    def copy_audio_file(self, source_path: str, destination_directory: str, rename: bool = False, new_name: str = None):
+        """
+        拷贝音频文件到指定路径，并支持自定义是否重命名。
+
+        :param source_path: 源音频文件的绝对路径
+        :param destination_directory: 目标目录路径
+        :param rename: 是否重命名音频文件，默认为 False
+        :param new_name: 新的文件名（不包括文件扩展名），仅在 rename=True 时有效
+        :return: 拷贝后的音频文件绝对路径，或者 None
+        """
+        try:
+            import shutil 
+
+            if not os.path.exists(source_path):
+                logging.error(f"源文件不存在: {source_path}")
+                return None
+
+            if not os.path.exists(destination_directory):
+                os.makedirs(destination_directory)
             
+            file_extension = os.path.splitext(source_path)[1]
+            if rename and new_name:
+                destination_path = os.path.join(destination_directory, new_name + file_extension)
+            else:
+                destination_path = os.path.join(destination_directory, os.path.basename(source_path))
+
+            shutil.copy2(source_path, destination_path)
+            return destination_path
+        except Exception as e:
+            logging.error(f"拷贝音频文件时发生异常: {str(e)}")
+            return None
+    
+    def clear_audio_files(self, directory: str, audio_suffixes: list = None):
+        """
+        清空指定文件夹内的所有音频文件。
+
+        :param directory: 要清空的文件夹路径
+        :param audio_suffixes: 需要删除的音频文件后缀列表，如 ['wav', 'mp3', 'flac']。默认为 ['wav', 'mp3']。
+        :return: 成功清空返回 True，失败返回 False
+        """
+        if audio_suffixes is None:
+            audio_suffixes = ['wav', 'mp3']
+
+        try:
+            if not os.path.exists(directory):
+                logging.error(f"指定的目录不存在: {directory}")
+                return False
+
+            for root, _, files in os.walk(directory):
+                for file in files:
+                    if any(file.endswith(suffix) for suffix in audio_suffixes):
+                        file_path = os.path.join(root, file)
+                        os.remove(file_path)
+                        logging.info(f"已删除音频文件: {file_path}")
+            return True
+        except Exception as e:
+            logging.error(f"清空音频文件时发生异常: {str(e)}")
+            return False

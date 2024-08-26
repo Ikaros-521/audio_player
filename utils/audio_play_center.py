@@ -81,17 +81,33 @@ class AUDIO_PLAY_CENTER:
 
                 with self.list_lock:  # 使用锁保护列表操作
                     data_json = self.audio_json_list.pop(0)  # 从列表中获取第一个元素并删除
-                voice_path = data_json["voice_path"]
                 
-                # 区分音频路径类型
-                if "mode" in data_json:
-                    if data_json["mode"] == "url":
-                        # 下载音频文件
-                        voice_path = self.common.download_audio("URL", voice_path, 60, "get")
-                        # 失败就跳过
-                        if voice_path is None:
-                            continue
-
+                voice_path = None
+                # 是否存在此参数
+                if "voice_name" in data_json:
+                    if data_json["voice_name"] != "":
+                        voice_name = data_json["voice_name"]
+                        voice_path = self.common.search_audio_file("cache", voice_name)
+                
+                # 本地没有检索到就加载别的
+                if voice_path is None:
+                    voice_path = data_json["voice_path"]
+                    
+                    # 区分音频路径类型
+                    if "mode" in data_json:
+                        if data_json["mode"] == "url":
+                            # logging.info(f"下载音频文件 {voice_path}")
+                            # 下载音频文件
+                            voice_path = self.common.download_audio("URL", voice_path, 60, "get")
+                            # 失败就跳过
+                            if voice_path is None:
+                                continue
+                            
+                    # 备份音频到cache目录
+                    if "voice_name" in data_json:
+                        if data_json["voice_name"] != "":
+                            new_voice_path = self.common.copy_audio_file(voice_path, "cache", True, data_json["voice_name"])
+ 
                 audio = AudioSegment.from_file(voice_path)
                 # 获取新的音频路径
                 tmp_audio_path = self.common.get_new_audio_path(self.audio_out_path, file_name='tmp_' + self.common.get_bj_time(4) + '.wav')
