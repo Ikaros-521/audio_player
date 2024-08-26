@@ -46,7 +46,7 @@
         <label for="textarea_audio_json">播放音频数据：</label>
         <br>
         <textarea class="textarea_config_common" id="textarea_audio_json" name="textarea_audio_json" rows="4"
-            cols="50">{"voice_path": "out\\2.mp3", "content": "out\\2.mp3",  "random_speed": {"enable": false, "max": 1.3, "min": 0.8}, "speed": 1}</textarea>
+            cols="50">{"voice_path": "out\\2.mp3", "mode": "local", "content": "out\\2.mp3",  "random_speed": {"enable": false, "max": 1.3, "min": 0.8}, "speed": 1}</textarea>
         <button id="play_button" onclick="play()" style="position: relative; bottom: 20px;">📤发送数据</button>
     </div>
     <div>
@@ -93,6 +93,7 @@
                 <code>
 {
     "voice_path": "out\\2.mp3",
+    "mode": "local",
     "content": "音频文本内容",
     "random_speed": {
         "enable": false,
@@ -107,6 +108,7 @@
             <p>参数说明：</p>
             <ul>
                 <li><strong>voice_path：</strong> 音频文件路径</li>
+                <li><strong>mode：</strong> 音频加载模式（local/url）非必填，不传默认为local，本地路径。url情况下，voice_path可以是在线url链接</li>
                 <li><strong>content：</strong> 音频文本内容</li>
                 <li><strong>random_speed enable：</strong> 启用随机播放功能（非必填，不填默认读取本地配置）</li>
                 <li><strong>random_speed max：</strong> 随机播放的最大速度（非必填，不填默认读取本地配置）</li>

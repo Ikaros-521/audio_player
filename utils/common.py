@@ -11,6 +11,9 @@ import logging
 import traceback
 
 class Common:
+    def __init__(self) -> None:
+        self.audio_out_path = "./out"
+
     # 获取北京时间
     def get_bj_time(self, type=0):
         """获取北京时间
@@ -187,3 +190,25 @@ class Common:
             logging.error(f"请求出错: {e}")
             return None
 
+    # 下载音频
+    def download_audio(self, type: str, file_url: str, timeout: int = 30, request_type: str = "get", data=None, json_data=None, audio_suffix: str = "wav"):
+        try:
+            if request_type == "get":
+                response = requests.get(file_url, params=data, timeout=timeout)
+            else:
+                response = requests.post(file_url, data=data, json=json_data, timeout=timeout)
+
+            if response.status_code == 200:
+                content = response.content
+                file_name = type + '_' + self.get_bj_time(4) + '.' + audio_suffix
+                voice_tmp_path = self.get_new_audio_path(self.audio_out_path, file_name)
+                with open(voice_tmp_path, 'wb') as file:
+                    file.write(content)
+                return voice_tmp_path
+            else:
+                logging.error(f'{type} 下载音频失败: {response.status_code}')
+                return None
+        except requests.Timeout:
+            logging.error(f"{type} 下载音频超时")
+            return None
+            

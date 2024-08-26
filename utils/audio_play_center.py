@@ -82,6 +82,16 @@ class AUDIO_PLAY_CENTER:
                 with self.list_lock:  # 使用锁保护列表操作
                     data_json = self.audio_json_list.pop(0)  # 从列表中获取第一个元素并删除
                 voice_path = data_json["voice_path"]
+                
+                # 区分音频路径类型
+                if "mode" in data_json:
+                    if data_json["mode"] == "url":
+                        # 下载音频文件
+                        voice_path = self.common.download_audio("URL", voice_path, 60, "get")
+                        # 失败就跳过
+                        if voice_path is None:
+                            continue
+
                 audio = AudioSegment.from_file(voice_path)
                 # 获取新的音频路径
                 tmp_audio_path = self.common.get_new_audio_path(self.audio_out_path, file_name='tmp_' + self.common.get_bj_time(4) + '.wav')
