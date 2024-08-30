@@ -166,6 +166,9 @@ github：[https://github.com/Ikaros-521/audio_player/releases](https://github.co
 
 # 更新日志
 
+- 2024-08-30
+  - 配置文件新增参数 pop_audio_when_read，支持控制 音频列表信息，在读取音频播放时是否在读取时就删除音频（true） 还是 播放完后再删除（false），在false情况下，第一个数据就是正在播放的音频信息
+
 - 2024-08-26
   - 支持 mode传参，local/url，可以通过url模式，将voice_path换成url在线路径，实现云音频播放
   - 新增参数 voice_name 音频文件名（非必填，传入情况下优先检索本地cache路径下的音频文件是否存在，不存在则转为使用voice_path）

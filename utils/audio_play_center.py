@@ -80,7 +80,11 @@ class AUDIO_PLAY_CENTER:
                     continue
 
                 with self.list_lock:  # 使用锁保护列表操作
-                    data_json = self.audio_json_list.pop(0)  # 从列表中获取第一个元素并删除
+                    # 是否读取并删除
+                    if self.config_data["pop_audio_when_read"]:
+                        data_json = self.audio_json_list.pop(0)  # 从列表中获取第一个元素并删除
+                    else:
+                        data_json = self.audio_json_list[0]
                 
                 voice_path = None
                 # 是否存在此参数
@@ -101,6 +105,10 @@ class AUDIO_PLAY_CENTER:
                             voice_path = self.common.download_audio("URL", voice_path, 60, "get")
                             # 失败就跳过
                             if voice_path is None:
+                                # 是否读取并删除
+                                if not self.config_data["pop_audio_when_read"]:
+                                    data_json = self.audio_json_list.pop(0)  # 从列表中获取第一个元素并删除
+                                
                                 continue
                             
                     # 备份音频到cache目录
@@ -162,6 +170,12 @@ class AUDIO_PLAY_CENTER:
                 # self.stream.close()
                 # wf.close()
 
+                # 播放完毕
+
+                # 是否读取并删除
+                if not self.config_data["pop_audio_when_read"]:
+                    data_json = self.audio_json_list.pop(0)  # 从列表中获取第一个元素并删除
+
                 # 启用音频信息回传AI Vtuber功能
                 if self.config_data["ai_vtuber"]["callback_enable"]:
                     self.send_audio_play_info_to_callback()
@@ -180,6 +194,10 @@ class AUDIO_PLAY_CENTER:
                 self.audio_json_list = []  # 重置列表
             except Exception as e:
                 logging.error(traceback.format_exc())
+
+                # 是否读取并删除，不管啥异常 删了再说
+                if not self.config_data["pop_audio_when_read"]:
+                    data_json = self.audio_json_list.pop(0)  # 从列表中获取第一个元素并删除
 
     async def start_play_thread(self):
         logging.info("启动音频播放线程...")
